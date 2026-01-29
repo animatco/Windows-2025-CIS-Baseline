@@ -8,6 +8,8 @@ control 'cis-19.5.1.1' do
   title 'Ensure Turn off toast notifications on the lock screen is set to Enabled'
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 19.5.1.1.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
+  only_if('Section 19 controls disabled') { input('run_section_19', value: true) }
+
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
   tag cis_id: '19.5.1.1'
   describe registry_key('HKEY_USERS\\{{ item }}\\SOFTWARE\\Policies\\Microsoft\\Windows\\CurrentVersion\\Pushnotifications') do
@@ -20,6 +22,8 @@ control 'cis-19.6.6.1.1' do
   title 'Ensure Turn off Help Experience Improvement Program is set to Enabled'
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 19.6.6.1.1.'
   only_if('Level 2 controls disabled') { input('run_level_2') }
+  only_if('Section 19 controls disabled') { input('run_section_19', value: true) }
+
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
   tag cis_id: '19.6.6.1.1'
   describe registry_key('HKEY_USERS\\{{ item }}\\SOFTWARE\\Policies\\Microsoft\\Assistance\\Client\\1.0') do
@@ -32,6 +36,8 @@ control 'cis-19.7.5.1' do
   title 'Ensure Do not preserve zone information in file attachments is set to Disabled'
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 19.7.5.1.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
+  only_if('Section 19 controls disabled') { input('run_section_19', value: true) }
+
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
   tag cis_id: '19.7.5.1'
   describe registry_key('HKEY_USERS\\{{ item }}\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\Attachments') do
@@ -44,6 +50,8 @@ control 'cis-19.7.5.2' do
   title 'Ensure Notify antivirus programs when opening attachments is set to Enabled'
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 19.7.5.2.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
+  only_if('Section 19 controls disabled') { input('run_section_19', value: true) }
+
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
   tag cis_id: '19.7.5.2'
   describe registry_key('HKEY_USERS\\{{ item }}\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\Attachments') do
@@ -56,6 +64,8 @@ control 'cis-19.7.8.1' do
   title 'Ensure Configure Windows spotlight on lock screen is set to Disabled'
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 19.7.8.1.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
+  only_if('Section 19 controls disabled') { input('run_section_19', value: true) }
+
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
   tag cis_id: '19.7.8.1'
   describe registry_key('HKEY_USERS\\{{ item }}\\SOFTWARE\\Policies\\Microsoft\\Windows\\CloudContent') do
@@ -68,6 +78,8 @@ control 'cis-19.7.8.2' do
   title 'Ensure Do not suggest third-party content in Windows spotlight is set to Enabled'
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 19.7.8.2.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
+  only_if('Section 19 controls disabled') { input('run_section_19', value: true) }
+
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
   tag cis_id: '19.7.8.2'
   describe registry_key('HKEY_USERS\\{{ item }}\\SOFTWARE\\Policies\\Microsoft\\Windows\\CloudContent') do
@@ -80,6 +92,8 @@ control 'cis-19.7.8.3' do
   title 'Ensure Do not use diagnostic data for tailored experiences is set to Enabled'
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 19.7.8.3.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
+  only_if('Section 19 controls disabled') { input('run_section_19', value: true) }
+
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
   tag cis_id: '19.7.8.3'
   describe registry_key('HKEY_USERS\\{{ item }}\\SOFTWARE\\Policies\\Microsoft\\Windows\\CloudContent') do
@@ -92,6 +106,8 @@ control 'cis-19.7.8.4' do
   title 'Ensure Turn off all Windows spotlight features is set to Enabled'
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 19.7.8.4.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
+  only_if('Section 19 controls disabled') { input('run_section_19', value: true) }
+
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
   tag cis_id: '19.7.8.4'
   describe registry_key('HKEY_USERS\\{{ item }}\\SOFTWARE\\Policies\\Microsoft\\Windows\\CloudContent') do
@@ -104,6 +120,8 @@ control 'cis-19.7.8.5' do
   title 'Ensure Turn off Spotlight collection on Desktop is set to Enabled'
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 19.7.8.5.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
+  only_if('Section 19 controls disabled') { input('run_section_19', value: true) }
+
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
   tag cis_id: '19.7.8.5'
   describe registry_key('HKEY_USERS\\{{ item }}\\SOFTWARE\\Policies\\Microsoft\\Windows\\CloudContent') do
@@ -116,6 +134,8 @@ control 'cis-19.7.26.1' do
   title 'Ensure Prevent users from sharing files within their profile is set to Enabled'
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 19.7.26.1.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
+  only_if('Section 19 controls disabled') { input('run_section_19', value: true) }
+
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
   tag cis_id: '19.7.26.1'
   describe registry_key('HKEY_USERS\\{{ item }}\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer') do
@@ -128,6 +148,8 @@ control 'cis-19.7.44.1' do
   title 'Ensure Always install with elevated privileges is set to Disabled'
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 19.7.44.1.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
+  only_if('Section 19 controls disabled') { input('run_section_19', value: true) }
+
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
   tag cis_id: '19.7.44.1'
   describe registry_key('HKEY_USERS\\{{ item }}\\SOFTWARE\\Policies\\Microsoft\\Windows\\Installer') do
@@ -140,6 +162,8 @@ control 'cis-19.7.46.2.1' do
   title 'Ensure Prevent Codec Download is set to Enabled'
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 19.7.46.2.1.'
   only_if('Level 2 controls disabled') { input('run_level_2') }
+  only_if('Section 19 controls disabled') { input('run_section_19', value: true) }
+
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
   tag cis_id: '19.7.46.2.1'
   describe registry_key('HKEY_USERS\\{{ item }}\\SOFTWARE\\Policies\\Microsoft\\Windowsmediaplayer') do
