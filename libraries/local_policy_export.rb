@@ -16,6 +16,8 @@ class SeceditPolicy
   def initialize(inspec)
     @inspec = inspec
     @cache = nil
+    @available = nil
+    @last_error = nil
   end
 
   def export_and_parse
@@ -25,7 +27,19 @@ class SeceditPolicy
     cfg = File.join(dir, 'secpol.cfg')
 
     cmd = @inspec.command(%(cmd.exe /c secedit /export /cfg "#{cfg}" /quiet))
-    raise "secedit export failed: #{cmd.stderr}" unless cmd.exit_status == 0
+    unless cmd.exit_status == 0
+      @available = false
+      @last_error = "secedit export failed (exit=#{cmd.exit_status}): #{cmd.stderr}".strip
+      begin
+        Inspec::Log.warn(@last_error)
+      rescue StandardError
+        # ignore logging issues
+      end
+      @cache = {}
+      return @cache
+    end
+
+    @available = true
 
     text = @inspec.file(cfg).content
     @cache = parse_ini(text)
@@ -38,7 +52,15 @@ class SeceditPolicy
     end
   end
 
-  def parse_ini(text)
+    def available?
+    @available == true
+  end
+
+  def last_error
+    @last_error
+  end
+
+def parse_ini(text)
     out = Hash.new { |h, k| h[k] = {} }
     current = nil
 

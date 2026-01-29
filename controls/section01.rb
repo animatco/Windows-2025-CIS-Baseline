@@ -3,6 +3,7 @@
 ## Auto-generated from ansible-lockdown/Windows-2025-CIS Ansible role
 ## Source section: section01
 
+
 control 'cis-1.1.1' do
   impact 1.0
   title 'Ensure Enforce password history is set to 24 or more passwords.'
@@ -10,6 +11,9 @@ control 'cis-1.1.1' do
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
   tag cis_id: '1.1.1'
+  pol = local_security_policy
+  only_if('Local Security Policy not readable via secedit on this target') { pol.available? }
+
   describe local_security_policy do
     its('PasswordHistorySize') { should cmp 24 }
   end
@@ -22,6 +26,9 @@ control 'cis-1.1.2' do
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
   tag cis_id: '1.1.2'
+  pol = local_security_policy
+  only_if('Local Security Policy not readable via secedit on this target') { pol.available? }
+
   describe local_security_policy do
     its('MaximumPasswordAge') { should cmp 365 }
   end
@@ -34,6 +41,9 @@ control 'cis-1.1.3' do
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
   tag cis_id: '1.1.3'
+  pol = local_security_policy
+  only_if('Local Security Policy not readable via secedit on this target') { pol.available? }
+
   describe local_security_policy do
     its('MinimumPasswordAge') { should cmp 1 }
   end
@@ -51,6 +61,7 @@ control 'cis-1.1.6' do
   end
 end
 
+
 control 'cis-1.1.4' do
   impact 1.0
   title 'Ensure Minimum password length is set to 14 or more characters'
@@ -58,6 +69,9 @@ control 'cis-1.1.4' do
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
   tag cis_id: '1.1.4'
+  pol = local_security_policy
+  only_if('Local Security Policy not readable via secedit on this target') { pol.available? }
+
   describe local_security_policy do
     its('MinimumPasswordLength') { should cmp 14 }
   end
@@ -70,6 +84,9 @@ control 'cis-1.1.5' do
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
   tag cis_id: '1.1.5'
+  pol = local_security_policy
+  only_if('Local Security Policy not readable via secedit on this target') { pol.available? }
+
   describe local_security_policy do
     its('PasswordComplexity') { should cmp 1 }
   end
@@ -82,6 +99,9 @@ control 'cis-1.1.7' do
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
   tag cis_id: '1.1.7'
+  pol = local_security_policy
+  only_if('Local Security Policy not readable via secedit on this target') { pol.available? }
+
   describe local_security_policy do
     its('ClearTextPassword') { should cmp 0 }
   end
@@ -94,6 +114,9 @@ control 'cis-1.2.2' do
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
   tag cis_id: '1.2.2'
+  pol = local_security_policy
+  only_if('Local Security Policy not readable via secedit on this target') { pol.available? }
+
   describe local_security_policy do
     its('LockoutBadCount') { should cmp 5 }
   end
@@ -106,6 +129,9 @@ control 'cis-1.2.4' do
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
   tag cis_id: '1.2.4'
+  pol = local_security_policy
+  only_if('Local Security Policy not readable via secedit on this target') { pol.available? }
+
   describe local_security_policy do
     its('ResetLockoutCount') { should cmp 15 }
   end
@@ -118,6 +144,9 @@ control 'cis-1.2.1' do
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
   tag cis_id: '1.2.1'
+  pol = local_security_policy
+  only_if('Local Security Policy not readable via secedit on this target') { pol.available? }
+
   describe local_security_policy do
     its('LockoutDuration') { should cmp 15 }
   end
@@ -130,6 +159,9 @@ control 'cis-1.2.3' do
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Member Server controls disabled') { input('server_role') == 'member_server' }
   tag cis_id: '1.2.3'
+  pol = local_security_policy
+  only_if('Local Security Policy not readable via secedit on this target') { pol.available? }
+
   describe local_security_policy do
     its('AllowAdministratorLockout') { should cmp 1 }
   end
