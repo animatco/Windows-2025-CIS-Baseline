@@ -1062,39 +1062,49 @@ control 'cis-2.3.7.3' do
 end
 
 control 'cis-2.3.7.4' do
+  title "Configure Interactive logon Message text for users attempting to log on"
+  desc  "CIS 2.3.7.4: Ensure the Interactive logon message text is set to the organization-approved value."
+
   impact 1.0
-  title 'Configure Interactive logon Message text for users attempting to log on'
-  desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 2.3.7.4.'
-  only_if('Level 1 controls disabled') { input('run_level_1') }
-  only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
-  tag cis_id: '2.3.7.4'
-  describe registry_key('HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System') do
-    its('LegalNoticeText') { should eq 'You are accessing a U.S. Government (USG) Information System (IS) that is provided for USG-authorized use only.
 
-By using this IS (which includes any device attached to this IS), you consent to the following conditions:
+  # Default markers align to CIS/DoD banner expectations; orgs override via inputs.
+  markers = input('expected_legal_notice_text_contains', value: [
+    'You are accessing a U.S. Government (USG) Information System',
+    'routinely intercepts and monitors communications',
+    'may inspect and seize data stored on this IS',
+    'Communications using, or data stored on, this IS are not private',
+    'no personal benefit or privacy'
+  ])
 
--The USG routinely intercepts and monitors communications on this IS for purposes including, but not limited to, penetration testing, COMSEC monitoring, network operations and defense, personnel misconduct (PM), law enforcement (LE), and counterintelligence (CI) investigations.
+  reg_path = 'HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System'
 
--At any time, the USG may inspect and seize data stored on this IS.
+  describe registry_key(reg_path) do
+    its('LegalNoticeText') { should_not be_nil }
+  end
 
--Communications using, or data stored on, this IS are not private, are subject to routine monitoring, interception, and search, and may be disclosed or used for any USG-authorized purpose.
+  # Use contains checks for portability across line endings / encoding
+  Array(markers).each do |needle|
+    next if needle.nil? || needle.to_s.strip.empty?
 
--This IS includes security measures (e.g., authentication and access controls) to protect USG interests--not for your personal benefit or privacy.
-
--Notwithstanding the above, using this IS does not constitute consent to PM, LE or CI investigative searching or monitoring of the content of privileged communications, or work product, related to personal representation or services by attorneys, psychotherapists, or clergy, and their assistants. Such communications and work product are private and confidential. See User Agreement for details.
-' }
+    describe registry_key(reg_path) do
+      its('LegalNoticeText') { should include needle }
+    end
   end
 end
 
 control 'cis-2.3.7.5' do
+  title "Configure Interactive logon Message title for users attempting to log on"
+  desc  "CIS 2.3.7.5: Ensure the Interactive logon message title is set to the organization-approved value."
+
   impact 1.0
-  title 'Configure Interactive logon Message title for users attempting to log on'
-  desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 2.3.7.5.'
-  only_if('Level 1 controls disabled') { input('run_level_1') }
-  only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
-  tag cis_id: '2.3.7.5'
-  describe registry_key('HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System') do
-    its('LegalNoticeCaption') { should eq 'DoD Notice and Consent Banner' }
+
+  # Default aligns to CIS/DoD banner; orgs override via inputs.
+  caption = input('expected_legal_notice_caption', value: 'DoD Notice and Consent Banner')
+
+  reg_path = 'HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System'
+
+  describe registry_key(reg_path) do
+    its('LegalNoticeCaption') { should cmp caption }
   end
 end
 
