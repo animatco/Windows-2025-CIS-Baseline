@@ -17,7 +17,7 @@ end
 
 control 'cis-17.1.2' do
   impact 1.0
-  title 'Ensure 'Audit Kerberos Authentication Service' is set to 'Success and Failure' DC Only | Domain Controller'
+  title "Ensure 'Audit Kerberos Authentication Service' is set to 'Success and Failure' DC Only | Domain Controller"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 17.1.2.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Domain Controller controls disabled') { input('server_role') == 'domain_controller' }
@@ -29,7 +29,7 @@ end
 
 control 'cis-17.1.3' do
   impact 1.0
-  title 'Ensure 'Audit Kerberos Service Ticket Operations' is set to 'Success and Failure' DC Only'
+  title "Ensure 'Audit Kerberos Service Ticket Operations' is set to 'Success and Failure' DC Only"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 17.1.3.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Domain Controller controls disabled') { input('server_role') == 'domain_controller' }

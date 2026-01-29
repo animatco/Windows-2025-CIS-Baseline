@@ -120,7 +120,7 @@ end
 
 control 'cis-2.2.9' do
   impact 1.0
-  title 'Ensure 'Allow log on through Remote Desktop Services' is set to 'Administrators' (DC only)'
+  title "Ensure 'Allow log on through Remote Desktop Services' is set to 'Administrators' (DC only)"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 2.2.9.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Domain Controller controls disabled') { input('server_role') == 'domain_controller' }
@@ -132,7 +132,7 @@ end
 
 control 'cis-2.2.10' do
   impact 1.0
-  title 'Ensure 'Allow log on through Remote Desktop Services' is set to 'Administrators, Remote Desktop Users' (MS Only)'
+  title "Ensure 'Allow log on through Remote Desktop Services' is set to 'Administrators, Remote Desktop Users' (MS Only)"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 2.2.10.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Member Server controls disabled') { input('server_role') == 'member_server' }
@@ -653,7 +653,7 @@ end
 
 control 'cis-2.2.38' do
   impact 1.0
-  title 'Ensure 'Manage auditing and security log' is set to Administrators | Domain Controller'
+  title "Ensure 'Manage auditing and security log' is set to Administrators | Domain Controller"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 2.2.38.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Domain Controller controls disabled') { input('server_role') == 'domain_controller' }
@@ -665,7 +665,7 @@ end
 
 control 'cis-2.2.39' do
   impact 1.0
-  title 'Ensure 'Manage auditing and security log' is set to 'Administrators' (MS only) | Member Server'
+  title "Ensure 'Manage auditing and security log' is set to 'Administrators' (MS only) | Member Server"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 2.2.39.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Member Server controls disabled') { input('server_role') == 'member_server' }
@@ -1484,7 +1484,7 @@ end
 
 control 'cis-2.3.11.8' do
   impact 1.0
-  title 'Ensure 'Network security: LDAP client encryption requirements' is set to 'Negotiate sealing' or higher.'
+  title "Ensure 'Network security: LDAP client encryption requirements' is set to 'Negotiate sealing' or higher."
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 2.3.11.8.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
@@ -1616,7 +1616,7 @@ end
 
 control 'cis-2.3.17.2' do
   impact 1.0
-  title 'Ensure User Account Control Behavior of the elevation prompt for administrators in Admin Approval Mode' is set to 'Prompt for consent on the secure desktop or higher'
+  title "Ensure User Account Control Behavior of the elevation prompt for administrators in Admin Approval Mode' is set to 'Prompt for consent on the secure desktop or higher"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 2.3.17.2.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }

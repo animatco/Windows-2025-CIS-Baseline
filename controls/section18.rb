@@ -113,7 +113,7 @@ end
 
 control 'cis-18.4.6' do
   impact 1.0
-  title 'Ensure 'NetBT NodeType configuration' is set to 'Enabled: P-node recommended''
+  title "Ensure 'NetBT NodeType configuration' is set to 'Enabled: P-node recommended'"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.4.6.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
@@ -293,7 +293,7 @@ end
 
 control 'cis-18.6.4.2' do
   impact 1.0
-  title 'Ensure 'Configure NetBIOS settings' is set to 'Enabled: Disable NetBIOS name resolution on public networks''
+  title "Ensure 'Configure NetBIOS settings' is set to 'Enabled: Disable NetBIOS name resolution on public networks'"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.6.4.2.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
@@ -305,7 +305,7 @@ end
 
 control 'cis-18.6.4.3' do
   impact 1.0
-  title 'Ensure 'Turn off default IPv6 DNS Servers' is set to 'Enabled''
+  title "Ensure 'Turn off default IPv6 DNS Servers' is set to 'Enabled'"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.6.4.3.'
   only_if('Level 2 controls disabled') { input('run_level_2') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
@@ -341,7 +341,7 @@ end
 
 control 'cis-18.6.7.1' do
   impact 1.0
-  title 'Ensure 'Audit client does not support encryption' is set to Enabled'
+  title "Ensure 'Audit client does not support encryption' is set to Enabled"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.6.7.1.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
@@ -353,7 +353,7 @@ end
 
 control 'cis-18.6.7.2' do
   impact 1.0
-  title 'Ensure 'Audit client does not support signing' is set to Enabled'
+  title "Ensure 'Audit client does not support signing' is set to Enabled"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.6.7.2.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
@@ -365,7 +365,7 @@ end
 
 control 'cis-18.6.7.3' do
   impact 1.0
-  title 'Ensure 'Audit insecure guest logon' is set to Enabled'
+  title "Ensure 'Audit insecure guest logon' is set to Enabled"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.6.7.3.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
@@ -377,7 +377,7 @@ end
 
 control 'cis-18.6.7.4' do
   impact 1.0
-  title 'Ensure 'Enable remote mailslots' is set to Disabled'
+  title "Ensure 'Enable remote mailslots' is set to Disabled"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.6.7.4.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
@@ -389,7 +389,7 @@ end
 
 control 'cis-18.6.7.5' do
   impact 1.0
-  title 'Ensure 'Mandate the minimum version of SMB' is set to 'Enabled: 3.1.1''
+  title "Ensure 'Mandate the minimum version of SMB' is set to 'Enabled: 3.1.1'"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.6.7.5.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
@@ -401,7 +401,7 @@ end
 
 control 'cis-18.6.7.6' do
   impact 1.0
-  title 'Ensure 'Set authentication rate limiter delay (milliseconds)' is set to Enabled: 2000 or more'
+  title "Ensure 'Set authentication rate limiter delay (milliseconds)' is set to Enabled: 2000 or more"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.6.7.6.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
@@ -413,7 +413,7 @@ end
 
 control 'cis-18.6.8.1' do
   impact 1.0
-  title 'Ensure 'Audit insecure guest logon' is set to Enabled'
+  title "Ensure 'Audit insecure guest logon' is set to Enabled"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.6.8.1.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
@@ -425,7 +425,7 @@ end
 
 control 'cis-18.6.8.2' do
   impact 1.0
-  title 'Ensure 'Audit server does not support encryption' is set to Enabled'
+  title "Ensure 'Audit server does not support encryption' is set to Enabled"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.6.8.2.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
@@ -437,7 +437,7 @@ end
 
 control 'cis-18.6.8.3' do
   impact 1.0
-  title 'Ensure 'Audit server does not support signing' is set to Enabled'
+  title "Ensure 'Audit server does not support signing' is set to Enabled"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.6.8.3.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
@@ -449,7 +449,7 @@ end
 
 control 'cis-18.6.8.4' do
   impact 1.0
-  title 'Ensure 'Enable authentication rate limiter' is set to Enabled'
+  title "Ensure 'Enable authentication rate limiter' is set to Enabled"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.6.8.4.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
@@ -473,7 +473,7 @@ end
 
 control 'cis-18.6.8.6' do
   impact 1.0
-  title 'Ensure 'Enable remote mailslots' is set to Disabled'
+  title "Ensure 'Enable remote mailslots' is set to Disabled"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.6.8.6.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
@@ -485,7 +485,7 @@ end
 
 control 'cis-18.6.8.7' do
   impact 1.0
-  title 'Ensure 'Mandate the minimum version of SMB' is set to Enabled: 3.1.1'
+  title "Ensure 'Mandate the minimum version of SMB' is set to Enabled: 3.1.1"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.6.8.7.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
@@ -497,7 +497,7 @@ end
 
 control 'cis-18.6.8.8' do
   impact 1.0
-  title 'Ensure 'Require Encryption' is set to 'Enabled''
+  title "Ensure 'Require Encryption' is set to 'Enabled'"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.6.8.8.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
@@ -581,7 +581,7 @@ end
 
 control 'cis-18.6.14.1' do
   impact 1.0
-  title 'Ensure 'Hardened UNC Paths' is set to 'Enabled, with Require Mutual Authentication, Require Integrity, and Require Privacy set for all NETLOGON and SYSVOL shares'
+  title "Ensure 'Hardened UNC Paths' is set to 'Enabled, with Require Mutual Authentication, Require Integrity, and Require Privacy set for all NETLOGON and SYSVOL shares"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.6.14.1.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
@@ -629,7 +629,7 @@ end
 
 control 'cis-18.6.21.1' do
   impact 1.0
-  title 'Ensure 'Minimize the number of simultaneous connections to the Internet or a Windows Domain' is set to 'Enabled: 3 = Prevent Wi-Fi when on Ethernet''
+  title "Ensure 'Minimize the number of simultaneous connections to the Internet or a Windows Domain' is set to 'Enabled: 3 = Prevent Wi-Fi when on Ethernet'"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.6.21.1.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
@@ -665,7 +665,7 @@ end
 
 control 'cis-18.7.2' do
   impact 1.0
-  title 'Ensure 'Configure Redirection Guard' is set to 'Enabled: Redirection Guard Enabled''
+  title "Ensure 'Configure Redirection Guard' is set to 'Enabled: Redirection Guard Enabled'"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.7.2.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
@@ -677,7 +677,7 @@ end
 
 control 'cis-18.7.3' do
   impact 1.0
-  title 'Ensure 'Configure RPC connection settings: Protocol to use for outgoing RPC connections' is set to 'Enabled: RPC over TCP''
+  title "Ensure 'Configure RPC connection settings: Protocol to use for outgoing RPC connections' is set to 'Enabled: RPC over TCP'"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.7.3.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
@@ -701,7 +701,7 @@ end
 
 control 'cis-18.7.5' do
   impact 1.0
-  title 'Ensure 'Configure RPC listener settings: Protocols to allow for incoming RPC connections' is set to 'Enabled: RPC over TCP''
+  title "Ensure 'Configure RPC listener settings: Protocols to allow for incoming RPC connections' is set to 'Enabled: RPC over TCP'"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.7.5.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
@@ -737,7 +737,7 @@ end
 
 control 'cis-18.7.8' do
   impact 1.0
-  title 'Ensure 'Configure RPC packet level privacy setting for incoming connections' is set to 'Enabled''
+  title "Ensure 'Configure RPC packet level privacy setting for incoming connections' is set to 'Enabled'"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.7.8.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
@@ -749,7 +749,7 @@ end
 
 control 'cis-18.7.9' do
   impact 1.0
-  title 'Ensure 'Configure Windows protected print' is set to Enabled'
+  title "Ensure 'Configure Windows protected print' is set to Enabled"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.7.9.'
   only_if('Level 2 controls disabled') { input('run_level_2') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
@@ -868,7 +868,7 @@ end
 
 control 'cis-18.9.5.2' do
   impact 1.0
-  title 'NG Ensure 'Turn On Virtualization Based Security: Select Platform Security Level' is set to 'Secure Boot' or higher'
+  title "NG Ensure 'Turn On Virtualization Based Security: Select Platform Security Level' is set to 'Secure Boot' or higher"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.9.5.2.'
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
   tag cis_id: '18.9.5.2'
@@ -946,7 +946,7 @@ end
 
 control 'cis-18.9.13.1' do
   impact 1.0
-  title 'Ensure 'Boot-Start Driver Initialization Policy' is set to 'Enabled: Good, unknown and bad but critical''
+  title "Ensure 'Boot-Start Driver Initialization Policy' is set to 'Enabled: Good, unknown and bad but critical'"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.9.13.1.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
@@ -958,7 +958,7 @@ end
 
 control 'cis-18.9.19.2' do
   impact 1.0
-  title 'Ensure 'Configure registry policy processing: Do not apply during periodic background processing' is set to 'Enabled: FALSE''
+  title "Ensure 'Configure registry policy processing: Do not apply during periodic background processing' is set to 'Enabled: FALSE'"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.9.19.2.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
@@ -1246,7 +1246,7 @@ end
 
 control 'cis-18.9.25.4' do
   impact 1.0
-  title 'Ensure Password Settings: Password Complexity is set to 'Enabled: Large letters + small letters + numbers + special character'
+  title "Ensure Password Settings: Password Complexity is set to 'Enabled: Large letters + small letters + numbers + special character"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.9.25.4.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Member Server controls disabled') { input('server_role') == 'member_server' }
@@ -1425,7 +1425,7 @@ end
 
 control 'cis-18.9.30.1.1' do
   impact 1.0
-  title 'Ensure 'Block NetBIOS-based discovery for domain controller location' is set to Enabled'
+  title "Ensure 'Block NetBIOS-based discovery for domain controller location' is set to Enabled"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.9.30.1.1.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
@@ -1569,7 +1569,7 @@ end
 
 control 'cis-18.9.39.2' do
   impact 1.0
-  title 'Ensure 'Configure SAM change password RPC methods policy' is set to Enabled: Allow strong encryption change password RPC method only'
+  title "Ensure 'Configure SAM change password RPC methods policy' is set to Enabled: Allow strong encryption change password RPC method only"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.9.39.2.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Domain Controller controls disabled') { input('server_role') == 'domain_controller' }
@@ -1581,7 +1581,7 @@ end
 
 control 'cis-18.9.39.3' do
   impact 1.0
-  title 'Ensure 'Configure SAM change password RPC methods policy' is set to Enabled: Block all change password RPC methods'
+  title "Ensure 'Configure SAM change password RPC methods policy' is set to Enabled: Block all change password RPC methods"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.9.39.3.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Member Server controls disabled') { input('server_role') == 'member_server' }
@@ -1665,7 +1665,7 @@ end
 
 control 'cis-18.10.4.2' do
   impact 1.0
-  title 'Ensure 'Not allow per-user unsigned packages to install by default' is set to Enabled'
+  title "Ensure 'Not allow per-user unsigned packages to install by default' is set to Enabled"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.10.4.2.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
@@ -1905,7 +1905,7 @@ end
 
 control 'cis-18.10.16.8' do
   impact 1.0
-  title 'Ensure 'Toggle user control over Insider builds' is set to Disabled'
+  title "Ensure 'Toggle user control over Insider builds' is set to Disabled"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.10.16.8.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
@@ -2301,7 +2301,7 @@ end
 
 control 'cis-18.10.43.10.3' do
   impact 1.0
-  title 'Ensure 'Turn off real-time protection' is set to 'Disabled''
+  title "Ensure 'Turn off real-time protection' is set to 'Disabled'"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.10.43.10.3.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
@@ -2325,7 +2325,7 @@ end
 
 control 'cis-18.10.43.10.5' do
   impact 1.0
-  title 'Ensure 'Turn on script scanning' is set to 'Enabled''
+  title "Ensure 'Turn on script scanning' is set to 'Enabled'"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.10.43.10.5.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
@@ -2397,7 +2397,7 @@ end
 
 control 'cis-18.10.43.13.2' do
   impact 1.0
-  title 'Ensure 'Scan packed executables' is set to Enabled'
+  title "Ensure 'Scan packed executables' is set to Enabled"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.10.43.13.2.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
@@ -2421,7 +2421,7 @@ end
 
 control 'cis-18.10.43.13.4' do
   impact 1.0
-  title 'Ensure 'Trigger a quick scan after X days without any scans' is set to Enabled: 7'
+  title "Ensure 'Trigger a quick scan after X days without any scans' is set to Enabled: 7"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.10.43.13.4.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
@@ -2457,7 +2457,7 @@ end
 
 control 'cis-18.10.43.17' do
   impact 1.0
-  title 'Ensure 'Control whether exclusions are visible to local users' is set to 'Enabled''
+  title "Ensure 'Control whether exclusions are visible to local users' is set to 'Enabled'"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.10.43.17.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
@@ -2481,7 +2481,7 @@ end
 
 control 'cis-18.10.56.1' do
   impact 1.0
-  title 'Ensure 'Turn off Push To Install service' is set to 'Enabled''
+  title "Ensure 'Turn off Push To Install service' is set to 'Enabled'"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.10.56.1.'
   only_if('Level 2 controls disabled') { input('run_level_2') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
@@ -2601,7 +2601,7 @@ end
 
 control 'cis-18.10.57.3.3.8' do
   impact 1.0
-  title 'Ensure 'Restrict clipboard transfer from server to client' is set to 'Enabled: Disable clipboard transfers from server to client''
+  title "Ensure 'Restrict clipboard transfer from server to client' is set to 'Enabled: Disable clipboard transfers from server to client'"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.10.57.3.3.8.'
   only_if('Level 2 controls disabled') { input('run_level_2') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
@@ -2673,7 +2673,7 @@ end
 
 control 'cis-18.10.57.3.10.1' do
   impact 1.0
-  title 'Ensure 'Set time limit for active but idle Remote Desktop Services sessions' is set to 'Enabled: 15 minutes or less, but not Never (0)'
+  title "Ensure 'Set time limit for active but idle Remote Desktop Services sessions' is set to 'Enabled: 15 minutes or less, but not Never (0)"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.10.57.3.10.1.'
   only_if('Level 2 controls disabled') { input('run_level_2') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
@@ -2733,7 +2733,7 @@ end
 
 control 'cis-18.10.58.2' do
   impact 1.0
-  title 'Ensure 'Turn on Basic feed authentication over HTTP' is set to 'Disabled''
+  title "Ensure 'Turn on Basic feed authentication over HTTP' is set to 'Disabled'"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.10.58.2.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
@@ -2841,7 +2841,7 @@ end
 
 control 'cis-18.10.81.2' do
   impact 1.0
-  title 'Ensure 'Always install with elevated privileges' is set to 'Disabled''
+  title "Ensure 'Always install with elevated privileges' is set to 'Disabled'"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.10.81.2.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
@@ -2865,7 +2865,7 @@ end
 
 control 'cis-18.10.82.1' do
   impact 1.0
-  title 'Ensure Configure the transmission of the user's password in the content of MPR notifications sent by winlogon. is set to Disabled'
+  title "Ensure Configure the transmission of the user's password in the content of MPR notifications sent by winlogon. is set to Disabled"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.10.82.1.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
@@ -3057,7 +3057,7 @@ end
 
 control 'cis-18.10.93.4.1' do
   impact 1.0
-  title 'Ensure 'Manage preview builds' is set to 'Disabled''
+  title "Ensure 'Manage preview builds' is set to 'Disabled'"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.10.93.4.1.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
@@ -3069,7 +3069,7 @@ end
 
 control 'cis-18.10.93.4.2' do
   impact 1.0
-  title 'Ensure 'Select when Preview Builds and Feature Updates are received' is set to 'Enabled: 180 or more days''
+  title "Ensure 'Select when Preview Builds and Feature Updates are received' is set to 'Enabled: 180 or more days'"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.10.93.4.2.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
