@@ -1,4 +1,4 @@
-# frozen_string_literal: true
+﻿# frozen_string_literal: true
 
 ## Auto-generated from ansible-lockdown/Windows-2025-CIS Ansible role
 ## Source section: section02
@@ -1310,7 +1310,7 @@ control 'cis-2.3.10.6' do
   only_if('Domain Controller controls disabled') { input('server_role') == 'domain_controller' }
   tag cis_id: '2.3.10.6'
   describe registry_key('HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\LanManServer\\Parameters') do
-    its('NullSessionPipes') { should eq '['LSARPC', 'NETLOGON', 'SAMR']' }
+    its('NullSessionPipes') { should cmp ['LSARPC', 'NETLOGON', 'SAMR'] }
   end
 end
 
@@ -1334,7 +1334,7 @@ control 'cis-2.3.10.8' do
   only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
   tag cis_id: '2.3.10.8'
   describe registry_key('HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Securepipeservers\\Winreg\\AllowedExactpaths') do
-    its('Machine') { should eq '['SYSTEM\\\\CurrentControlSet\\\\Control\\\\ProductOptions', 'SYSTEM\\\\CurrentControlSet\\\\Control\\\\Server Applications', 'SOFTWARE\\\\Microsoft\\\\Windows NT\\\\CurrentVersion']' }
+    its('Machine') { should cmp ['SYSTEM\\\\CurrentControlSet\\\\Control\\\\ProductOptions', 'SYSTEM\\\\CurrentControlSet\\\\Control\\\\Server Applications', 'SOFTWARE\\\\Microsoft\\\\Windows NT\\\\CurrentVersion'] }
   end
 end
 
