@@ -4,20 +4,19 @@
 #
 # Exposes:
 #   local_security_policy.PasswordHistorySize
+#   local_security_policy['MinimumPasswordLength']
 #   user_right('SeDenyNetworkLogonRight')
 #
 # Notes:
 # - Uses secedit export; requires local admin.
-# - Caches exported policy in a temp file per-run.
+# - Caches exported policy in a temp file per run.
 
 require 'tmpdir'
 
 class SeceditPolicy
   def initialize(inspec)
     @inspec = inspec
-    @cache = nil
-    @available = nil
-    @last_error = nil
+    @cache  = nil
   end
 
   def export_and_parse
@@ -26,42 +25,30 @@ class SeceditPolicy
     dir = Dir.mktmpdir('inspec-secedit-')
     cfg = File.join(dir, 'secpol.cfg')
 
-    cmd = @inspec.command(%(cmd.exe /c secedit /export /cfg "#{cfg}" /quiet))
+    win_dir = ENV['WINDIR'] || 'C:\\Windows'
+    db      = File.join(win_dir, 'security', 'database', 'secedit.sdb')
+
+    cmd = @inspec.command(%(cmd.exe /c secedit /export /db "#{db}" /cfg "#{cfg}" /quiet))
+
     unless cmd.exit_status == 0
-      @available = false
-      @last_error = "secedit export failed (exit=#{cmd.exit_status}): #{cmd.stderr}".strip
-      begin
-        Inspec::Log.warn(@last_error)
-      rescue StandardError
-        # ignore logging issues
-      end
-      @cache = {}
-      return @cache
+      raise "secedit export failed (#{cmd.exit_status}): #{cmd.stderr}"
     end
 
-    @available = true
-
-    text = @inspec.file(cfg).content
+    text   = @inspec.file(cfg).content
     @cache = parse_ini(text)
     @cache
   ensure
     begin
-      @inspec.command(%(cmd.exe /c rmdir /s /q "#{dir}")).run if dir && dir.start_with?(Dir.tmpdir)
+      if dir && dir.start_with?(Dir.tmpdir)
+        @inspec.command(%(cmd.exe /c rmdir /s /q "#{dir}")).run
+      end
     rescue StandardError
       # best effort cleanup
     end
   end
 
-    def available?
-    @available == true
-  end
-
-  def last_error
-    @last_error
-  end
-
-def parse_ini(text)
-    out = Hash.new { |h, k| h[k] = {} }
+  def parse_ini(text)
+    out     = Hash.new { |h, k| h[k] = {} }
     current = nil
 
     text.to_s.each_line do |line|
@@ -82,6 +69,7 @@ def parse_ini(text)
         out[current][k] = v
       end
     end
+
     out
   end
 end
@@ -99,10 +87,10 @@ class LocalSecurityPolicy < Inspec.resource(1)
 
   # Allow: its('PasswordHistorySize') { should cmp 24 }
   def method_missing(name, *args)
-    key = name.to_s
-    # System Access, Event Audit, Registry Values
+    key   = name.to_s
     value = lookup_key(key)
     return to_typed(value) if value
+
     super
   end
 
@@ -127,6 +115,7 @@ class LocalSecurityPolicy < Inspec.resource(1)
     return nil if v.nil?
     # secedit often stores numbers as strings
     return v.to_i if v.match?(/^[-]?\d+$/)
+
     v
   end
 end
@@ -139,7 +128,7 @@ class UserRight < Inspec.resource(1)
 
   def initialize(right_name)
     super()
-    @right = right_name.to_s
+    @right  = right_name.to_s
     @policy = SeceditPolicy.new(inspec).export_and_parse
   end
 
@@ -156,6 +145,7 @@ class UserRight < Inspec.resource(1)
 
   def method_missing(name, *args)
     return value if name.to_s == 'values'
+
     super
   end
 
