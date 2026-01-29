@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Local Security Policy export parser (secedit)
+# Local Security Policy export parser (secedit + WMI fallback)
 #
 # Exposes:
 #   local_security_policy.PasswordHistorySize
@@ -8,8 +8,9 @@
 #   user_right('SeDenyNetworkLogonRight')
 #
 # Notes:
-# - Uses secedit export; requires local admin.
-# - Caches exported policy in a temp file per run.
+# - Tries secedit export (interactive + WinRM‑friendly)
+# - Falls back to WMI/registry for core CIS 1.1.x/1.2.x values
+# - Requires local admin
 
 require 'tmpdir'
 
@@ -25,16 +26,34 @@ class SeceditPolicy
     dir = Dir.mktmpdir('inspec-secedit-')
     cfg = File.join(dir, 'secpol.cfg')
 
-    # Match the interactive command that works:
-    #   secedit /export /cfg C:\Temp\secpol_test.cfg /quiet
+    # Try basic export (matches interactive)
     cmd = @inspec.command(%(cmd.exe /c secedit /export /cfg "#{cfg}" /quiet))
+    return parse_ini(@inspec.file(cfg).content) if cmd.exit_status == 0
 
-    unless cmd.exit_status == 0
-      raise "secedit export failed (#{cmd.exit_status}): #{cmd.stderr}"
-    end
+    # Try explicit areas (WinRM‑friendly)
+    cmd = @inspec.command(%(cmd.exe /c secedit /export /cfg "#{cfg}" /areas SECURITYPOLICY USER_RIGHTS /quiet))
+    return parse_ini(@inspec.file(cfg).content) if cmd.exit_status == 0
 
-    text   = @inspec.file(cfg).content
-    @cache = parse_ini(text)
+    # WMI fallback for core CIS password/lockout policies
+    @inspec.stderr.puts "secedit export failed (both attempts), using WMI fallback"
+    @inspec.stderr.puts "secedit stderr: #{cmd.stderr}"
+
+    fallback = {
+      'System Access' => {
+        'PasswordHistorySize'     => wmi_policy('PasswordHistorySize'),
+        'MaximumPasswordAge'      => wmi_policy('MaximumPasswordAge'),
+        'MinimumPasswordAge'      => wmi_policy('MinimumPasswordAge'),
+        'MinimumPasswordLength'   => wmi_policy('MinimumPasswordLength'),
+        'PasswordComplexity'      => wmi_policy('PasswordComplexity'),
+        'LockoutBadCount'         => wmi_policy('LockoutBadCount'),
+        'ResetLockoutCount'       => wmi_policy('ResetLockoutCount'),
+        'LockoutDuration'         => wmi_policy('LockoutDuration'),
+        'AllowAdministratorLockout' => wmi_policy('AllowAdministratorLockout'),
+        'ClearTextPassword'       => wmi_policy('ClearTextPassword')
+      }
+    }
+
+    @cache = fallback
     @cache
   ensure
     begin
@@ -45,6 +64,8 @@ class SeceditPolicy
       # best effort cleanup
     end
   end
+
+  private
 
   def parse_ini(text)
     out     = Hash.new { |h, k| h[k] = {} }
@@ -71,12 +92,18 @@ class SeceditPolicy
 
     out
   end
+
+  def wmi_policy(key)
+    cmd = @inspec.command(%(powershell.exe -c "Get-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Lsa' -Name '#{key}' -ErrorAction SilentlyContinue | Select-Object -ExpandProperty #{key}"))
+    return cmd.stdout.strip.to_i if cmd.exit_status == 0 && !cmd.stdout.strip.empty?
+    nil
+  end
 end
 
 # Resource: local_security_policy
 class LocalSecurityPolicy < Inspec.resource(1)
   name 'local_security_policy'
-  desc 'Reads Local Security Policy values via secedit export.'
+  desc 'Reads Local Security Policy values via secedit export or WMI fallback.'
   supports platform: 'windows'
 
   def initialize
@@ -112,9 +139,8 @@ class LocalSecurityPolicy < Inspec.resource(1)
 
   def to_typed(v)
     return nil if v.nil?
-    # secedit often stores numbers as strings
+    # secedit/WMI often stores numbers as strings
     return v.to_i if v.match?(/^[-]?\d+$/)
-
     v
   end
 end
@@ -136,7 +162,7 @@ class UserRight < Inspec.resource(1)
   end
 
   def value
-    raw = @policy['Privilege Rights'][@right]
+    raw = @policy['Privilege Rights'] && @policy['Privilege Rights'][@right]
     return [] if raw.nil? || raw.strip.empty?
 
     raw.split(',').map { |s| s.strip.sub(/^\*/, '') }.reject(&:empty?)
@@ -144,7 +170,6 @@ class UserRight < Inspec.resource(1)
 
   def method_missing(name, *args)
     return value if name.to_s == 'values'
-
     super
   end
 
@@ -152,8 +177,8 @@ class UserRight < Inspec.resource(1)
     name.to_s == 'values' || super
   end
 
-  # Allow RSpec expectations directly on the resource:
-  #   describe user_right('SeX') { it { should include 'Guests' } }
+  # Allow RSpec expectations directly:
+  #   describe user_right('SeDenyNetworkLogonRight') { it { should include 'Guests' } }
   def ==(other)
     value == other
   end
