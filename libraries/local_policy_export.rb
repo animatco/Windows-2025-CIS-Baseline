@@ -25,10 +25,9 @@ class SeceditPolicy
     dir = Dir.mktmpdir('inspec-secedit-')
     cfg = File.join(dir, 'secpol.cfg')
 
-    win_dir = ENV['WINDIR'] || 'C:\\Windows'
-    db      = File.join(win_dir, 'security', 'database', 'secedit.sdb')
-
-    cmd = @inspec.command(%(cmd.exe /c secedit /export /db "#{db}" /cfg "#{cfg}" /quiet))
+    # Match the interactive command that works:
+    #   secedit /export /cfg C:\Temp\secpol_test.cfg /quiet
+    cmd = @inspec.command(%(cmd.exe /c secedit /export /cfg "#{cfg}" /quiet))
 
     unless cmd.exit_status == 0
       raise "secedit export failed (#{cmd.exit_status}): #{cmd.stderr}"
