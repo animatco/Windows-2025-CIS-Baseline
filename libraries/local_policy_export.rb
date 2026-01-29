@@ -132,7 +132,7 @@ class LocalSecurityPolicy < Inspec.resource(1)
 
   def lookup_key(key)
     %w[System Access Event Audit Registry Values].each do |section|
-      return @policy[section][key] if @policy[section].key?(key)
+      return @policy[section][key] if @policy[section] && @policy[section].key?(key)
     end
     nil
   end
@@ -162,7 +162,8 @@ class UserRight < Inspec.resource(1)
   end
 
   def value
-    raw = @policy['Privilege Rights'] && @policy['Privilege Rights'][@right]
+    # Safe nil check for when secedit fails
+    raw = @policy.dig('Privilege Rights', @right)
     return [] if raw.nil? || raw.strip.empty?
 
     raw.split(',').map { |s| s.strip.sub(/^\*/, '') }.reject(&:empty?)
