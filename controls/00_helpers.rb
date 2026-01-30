@@ -1,3 +1,2 @@
-
-# Register helper module with Inspec
+require_relative '../libraries/cis_helpers'
 include CisHelpers
