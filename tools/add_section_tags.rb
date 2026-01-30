@@ -1,13 +1,21 @@
 #!/usr/bin/env ruby
-# Automatically insert `tag section: 'X.Y'` into all CIS controls.
+# Automatically insert `tag section: 'X.Y'` into CIS controls.
+# Supports:
+#   - Running on all controls (default)
+#   - Running on specific files (ARGV)
+#   - Idempotent insertion (never duplicates tags)
 
 require 'fileutils'
+
+# If files are passed as arguments, process only those.
+# Otherwise, process all controls.
+target_files = ARGV.empty? ? Dir.glob("controls/*.rb") : ARGV
 
 # Matches control 'cis-2.2.3' or control "cis-18.9.12.1"
 CONTROL_REGEX = /^control\s+['"]cis-(\d+\.\d+)[^'"]*['"]/
 TAG_REGEX     = /^\s*tag\s+section:/
 
-Dir.glob("controls/*.rb").each do |file|
+target_files.each do |file|
   lines = File.readlines(file)
   changed = false
   output = []
@@ -24,7 +32,7 @@ Dir.glob("controls/*.rb").each do |file|
       current_section = $1 # e.g., "2.2", "18.9"
     end
 
-    # Skip if already tagged
+    # Detect existing tag
     if inside_control && line =~ TAG_REGEX
       tag_inserted = true
     end

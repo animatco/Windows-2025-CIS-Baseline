@@ -1,9 +1,20 @@
 ﻿# frozen_string_literal: true
+###############################################
+#  CIS Microsoft Windows Server 2025 Benchmark
+#  Section 02 — User Rights Assignment
+###############################################
 
-## Auto-generated from ansible-lockdown/Windows-2025-CIS Ansible role
-## Source section: section02
+require_relative '../libraries/cis_password_policy'
+require_relative '../libraries/cis_privilege'
+require_relative '../libraries/cis_audit_policy'
+require_relative '../libraries/cis_security_options'
 
-only_if('Section 02 disabled by input') { input('run_section_02') }
+require_relative '../libraries/local_policy_export'
+require_relative '../libraries/user_right'
+
+only_if("Section 02 disabled by input") do
+  input("run_section_02")
+end
 
 #
 # 2.2.1 Access Credential Manager as a trusted caller

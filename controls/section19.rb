@@ -1,9 +1,20 @@
 ﻿# frozen_string_literal: true
+###############################################
+#  CIS Microsoft Windows Server 2025 Benchmark
+#  Section 19 — Administrative Templates (User)
+###############################################
 
-## Auto-generated from ansible-lockdown/Windows-2025-CIS Ansible role
-## Source section: section19
-only_if('Section 19 disabled by input') { input('run_section_19') }
+require_relative '../libraries/cis_password_policy'
+require_relative '../libraries/cis_privilege'
+require_relative '../libraries/cis_audit_policy'
+require_relative '../libraries/cis_security_options'
 
+require_relative '../libraries/local_policy_export'
+require_relative '../libraries/user_right'
+
+only_if("Section 19 disabled by input") do
+  input("run_section_19")
+end
 
 control 'cis-19.5.1.1' do
   impact 1.0

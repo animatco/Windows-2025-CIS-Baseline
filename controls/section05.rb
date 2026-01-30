@@ -1,8 +1,20 @@
 ﻿# frozen_string_literal: true
+###############################################
+#  CIS Microsoft Windows Server 2025 Benchmark
+#  Section 05 — System Services
+###############################################
 
-## Auto-generated from ansible-lockdown/Windows-2025-CIS Ansible role
-## Source section: section05
-only_if('Section 05 disabled by input') { input('run_section_05') }
+require_relative '../libraries/cis_password_policy'
+require_relative '../libraries/cis_privilege'
+require_relative '../libraries/cis_audit_policy'
+require_relative '../libraries/cis_security_options'
+
+require_relative '../libraries/local_policy_export'
+require_relative '../libraries/user_right'
+
+only_if("Section 05 disabled by input") do
+  input("run_section_05")
+end
 
 control 'cis-5.1' do
   impact 1.0
