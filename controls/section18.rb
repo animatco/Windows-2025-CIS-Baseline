@@ -4,13 +4,14 @@
 #  Section 18 — Administrative Templates (Computer)
 ###############################################
 
-require_relative '../libraries/cis_password_policy'
-require_relative '../libraries/cis_privilege'
-require_relative '../libraries/cis_audit_policy'
-require_relative '../libraries/cis_security_options'
+require_relative File.join(__dir__, '..', 'libraries', 'cis_password_policy')
+require_relative File.join(__dir__, '..', 'libraries', 'cis_privilege')
+require_relative File.join(__dir__, '..', 'libraries', 'cis_audit_policy')
+require_relative File.join(__dir__, '..', 'libraries', 'cis_security_options')
 
-require_relative '../libraries/local_policy_export'
-require_relative '../libraries/user_right'
+require_relative File.join(__dir__, '..', 'libraries', 'local_policy_export')
+require_relative File.join(__dir__, '..', 'libraries', 'user_right')
+
 
 only_if("Section 18 disabled by input") do
   input("run_section_18")
