@@ -1,16 +1,8 @@
-﻿# frozen_string_literal: true
+# frozen_string_literal: true
 ###############################################
 #  CIS Microsoft Windows Server 2025 Benchmark
 #  Section 18 — Administrative Templates (Computer)
 ###############################################
-
-require inspec.profile.file('libraries/cis_password_policy.rb')
-require inspec.profile.file('libraries/cis_privilege.rb')
-require inspec.profile.file('libraries/cis_audit_policy.rb')
-require inspec.profile.file('libraries/cis_security_options.rb')
-require inspec.profile.file('libraries/local_policy_export.rb')
-require inspec.profile.file('libraries/user_right.rb')
-
 only_if("Section 18 disabled by input") do
   input("run_section_18")
 end
