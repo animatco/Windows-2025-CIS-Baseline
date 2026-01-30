@@ -41,8 +41,8 @@ class SeceditPolicy
     end
 
     # WMI fallback for core CIS password/lockout policies
-    @inspec.stderr.puts "secedit export failed (both attempts), using WMI fallback"
-    @inspec.stderr.puts "secedit stderr: #{cmd.stderr}"
+    #@inspec.stderr.puts "secedit export failed (both attempts), using WMI fallback"
+    #@inspec.stderr.puts "secedit stderr: #{cmd.stderr}"
 
     fallback = {
       'System Access' => {
