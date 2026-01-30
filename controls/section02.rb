@@ -19,7 +19,7 @@ control 'cis-2.2.1' do
   tag cis_id: '2.2.1'
 
   describe 'Privilege: SeTrustedCredManAccessPrivilege' do
-    subject { user_right('SeTrustedCredManAccessPrivilege') }
+    subject { user_right('SeTrustedCredManAccessPrivilege').value }
     it { should eq [] }
   end
 end
@@ -38,7 +38,7 @@ control 'cis-2.2.2' do
   tag cis_id: '2.2.2'
 
   describe 'Privilege: SeNetworkLogonRight' do
-    subject { user_right('SeNetworkLogonRight') }
+    subject { user_right('SeNetworkLogonRight').value }
     it { should include 'Administrators' }
     it { should include 'Authenticated Users' }
     it { should include 'ENTERPRISE DOMAIN CONTROLLERS' }
@@ -59,7 +59,7 @@ control 'cis-2.2.3' do
   tag cis_id: '2.2.3'
 
   describe 'Privilege: SeNetworkLogonRight' do
-    subject { user_right('SeNetworkLogonRight') }
+    subject { user_right('SeNetworkLogonRight').value }
     it { should include 'Administrators' }
     it { should include 'Authenticated Users' }
   end
@@ -79,7 +79,7 @@ control 'cis-2.2.4' do
   tag cis_id: '2.2.4'
 
   describe 'Privilege: SeTcbPrivilege' do
-    subject { user_right('SeTcbPrivilege') }
+    subject { user_right('SeTcbPrivilege').value }
     it { should eq [] }
   end
 end
@@ -98,7 +98,7 @@ control 'cis-2.2.5' do
   tag cis_id: '2.2.5'
 
   describe 'Privilege: SeMachineAccountPrivilege' do
-    subject { user_right('SeMachineAccountPrivilege') }
+    subject { user_right('SeMachineAccountPrivilege').value }
     it { should include 'Administrators' }
   end
 end
@@ -117,7 +117,7 @@ control 'cis-2.2.6' do
   tag cis_id: '2.2.6'
 
   describe 'Privilege: SeIncreaseQuotaPrivilege' do
-    subject { user_right('SeIncreaseQuotaPrivilege') }
+    subject { user_right('SeIncreaseQuotaPrivilege').value }
     it { should include 'Administrators' }
     it { should include 'LOCAL SERVICE' }
     it { should include 'NETWORK SERVICE' }
@@ -138,7 +138,7 @@ control 'cis-2.2.7' do
   tag cis_id: '2.2.7'
 
   describe 'Privilege: SeInteractiveLogonRight' do
-    subject { user_right('SeInteractiveLogonRight') }
+    subject { user_right('SeInteractiveLogonRight').value }
     it { should include 'Administrators' }
     it { should include 'ENTERPRISE DOMAIN CONTROLLERS' }
   end
@@ -158,7 +158,7 @@ control 'cis-2.2.8' do
   tag cis_id: '2.2.8'
 
   describe 'Privilege: SeInteractiveLogonRight' do
-    subject { user_right('SeInteractiveLogonRight') }
+    subject { user_right('SeInteractiveLogonRight').value }
     it { should include 'Administrators' }
   end
 end
@@ -177,7 +177,7 @@ control 'cis-2.2.9' do
   tag cis_id: '2.2.9'
 
   describe 'Privilege: SeRemoteInteractiveLogonRight' do
-    subject { user_right('SeRemoteInteractiveLogonRight') }
+    subject { user_right('SeRemoteInteractiveLogonRight').value }
     it { should include 'Administrators' }
   end
 end
@@ -196,7 +196,7 @@ control 'cis-2.2.10' do
   tag cis_id: '2.2.10'
 
   describe 'Privilege: SeRemoteInteractiveLogonRight' do
-    subject { user_right('SeRemoteInteractiveLogonRight') }
+    subject { user_right('SeRemoteInteractiveLogonRight').value }
     it { should include 'Administrators' }
     it { should include 'Remote Desktop Users' }
   end
@@ -216,7 +216,7 @@ control 'cis-2.2.11' do
   tag cis_id: '2.2.11'
 
   describe 'Privilege: SeBackupPrivilege' do
-    subject { user_right('SeBackupPrivilege') }
+    subject { user_right('SeBackupPrivilege').value }
     it { should include 'Administrators' }
   end
 end
@@ -235,7 +235,7 @@ control 'cis-2.2.12' do
   tag cis_id: '2.2.12'
 
   describe 'Privilege: SeSystemTimePrivilege' do
-    subject { user_right('SeSystemTimePrivilege') }
+    subject { user_right('SeSystemTimePrivilege').value }
     it { should include 'Administrators' }
     it { should include 'LOCAL SERVICE' }
   end
@@ -255,7 +255,7 @@ control 'cis-2.2.13' do
   tag cis_id: '2.2.13'
 
   describe 'Privilege: SeTimeZonePrivilege' do
-    subject { user_right('SeTimeZonePrivilege') }
+    subject { user_right('SeTimeZonePrivilege').value }
     it { should include 'Administrators' }
     it { should include 'LOCAL SERVICE' }
   end
@@ -275,7 +275,7 @@ control 'cis-2.2.14' do
   tag cis_id: '2.2.14'
 
   describe 'Privilege: SeCreatePagefilePrivilege' do
-    subject { user_right('SeCreatePagefilePrivilege') }
+    subject { user_right('SeCreatePagefilePrivilege').value }
     it { should include 'Administrators' }
   end
 end
@@ -294,7 +294,7 @@ control 'cis-2.2.15' do
   tag cis_id: '2.2.15'
 
   describe 'Privilege: SeCreateTokenPrivilege' do
-    subject { user_right('SeCreateTokenPrivilege') }
+    subject { user_right('SeCreateTokenPrivilege').value }
     it { should eq [] }
   end
 end
@@ -313,7 +313,7 @@ control 'cis-2.2.16' do
   tag cis_id: '2.2.16'
 
   describe 'Privilege: SeCreateGlobalPrivilege' do
-    subject { user_right('SeCreateGlobalPrivilege') }
+    subject { user_right('SeCreateGlobalPrivilege').value }
     it { should include 'Administrators' }
     it { should include 'LOCAL SERVICE' }
     it { should include 'NETWORK SERVICE' }
@@ -335,7 +335,7 @@ control 'cis-2.2.17' do
   tag cis_id: '2.2.17'
 
   describe 'Privilege: SeCreatePermanentPrivilege' do
-    subject { user_right('SeCreatePermanentPrivilege') }
+    subject { user_right('SeCreatePermanentPrivilege').value }
     it { should eq [] }
   end
 end
@@ -354,7 +354,7 @@ control 'cis-2.2.18' do
   tag cis_id: '2.2.18'
 
   describe 'Privilege: SeCreateSymbolicLinkPrivilege' do
-    subject { user_right('SeCreateSymbolicLinkPrivilege') }
+    subject { user_right('SeCreateSymbolicLinkPrivilege').value }
     it { should include 'Administrators' }
   end
 end
@@ -373,7 +373,7 @@ control 'cis-2.2.19' do
   tag cis_id: '2.2.19'
 
   describe 'Privilege: SeCreateSymbolicLinkPrivilege' do
-    subject { user_right('SeCreateSymbolicLinkPrivilege') }
+    subject { user_right('SeCreateSymbolicLinkPrivilege').value }
     it { should include 'Administrators' }
   end
 end
@@ -392,7 +392,7 @@ control 'cis-2.2.20' do
   tag cis_id: '2.2.20'
 
   describe 'Privilege: SeDebugPrivilege' do
-    subject { user_right('SeDebugPrivilege') }
+    subject { user_right('SeDebugPrivilege').value }
     it { should include 'Administrators' }
   end
 end
@@ -411,7 +411,7 @@ control 'cis-2.2.21' do
   tag cis_id: '2.2.21'
 
   describe 'Privilege: SeDenyNetworkLogonRight' do
-    subject { user_right('SeDenyNetworkLogonRight') }
+    subject { user_right('SeDenyNetworkLogonRight').value }
     it { should include 'Guests' }
   end
 end
@@ -430,7 +430,7 @@ control 'cis-2.2.22' do
   tag cis_id: '2.2.22'
 
   describe 'Privilege: SeDenyNetworkLogonRight' do
-    subject { user_right('SeDenyNetworkLogonRight') }
+    subject { user_right('SeDenyNetworkLogonRight').value }
     it { should include 'Guests' }
     it { should include 'Local Account' }
     it { should include 'Administrators' }
@@ -451,7 +451,7 @@ control 'cis-2.2.23' do
   tag cis_id: '2.2.23'
 
   describe 'Privilege: SeDenyBatchLogonRight' do
-    subject { user_right('SeDenyBatchLogonRight') }
+    subject { user_right('SeDenyBatchLogonRight').value }
     it { should include 'Guests' }
   end
 end
@@ -470,7 +470,7 @@ control 'cis-2.2.24' do
   tag cis_id: '2.2.24'
 
   describe 'Privilege: SeDenyServiceLogonRight' do
-    subject { user_right('SeDenyServiceLogonRight') }
+    subject { user_right('SeDenyServiceLogonRight').value }
     it { should include 'Guests' }
   end
 end
@@ -489,7 +489,7 @@ control 'cis-2.2.25' do
   tag cis_id: '2.2.25'
 
   describe 'Privilege: SeDenyInteractiveLogonRight' do
-    subject { user_right('SeDenyInteractiveLogonRight') }
+    subject { user_right('SeDenyInteractiveLogonRight').value }
     it { should include 'Guests' }
   end
 end
@@ -508,7 +508,7 @@ control 'cis-2.2.26' do
   tag cis_id: '2.2.26'
 
   describe 'Privilege: SeDenyRemoteInteractiveLogonRight' do
-    subject { user_right('SeDenyRemoteInteractiveLogonRight') }
+    subject { user_right('SeDenyRemoteInteractiveLogonRight').value }
     it { should include 'Guests' }
   end
 end
@@ -527,7 +527,7 @@ control 'cis-2.2.27' do
   tag cis_id: '2.2.27'
 
   describe 'Privilege: SeDenyRemoteInteractiveLogonRight' do
-    subject { user_right('SeDenyRemoteInteractiveLogonRight') }
+    subject { user_right('SeDenyRemoteInteractiveLogonRight').value }
     it { should include 'Guests' }
     it { should include 'Local Account' }
   end
@@ -547,7 +547,7 @@ control 'cis-2.2.28' do
   tag cis_id: '2.2.28'
 
   describe 'Privilege: SeEnableDelegationPrivilege' do
-    subject { user_right('SeEnableDelegationPrivilege') }
+    subject { user_right('SeEnableDelegationPrivilege').value }
     it { should include 'Administrators' }
   end
 end
@@ -566,7 +566,7 @@ control 'cis-2.2.29' do
   tag cis_id: '2.2.29'
 
   describe 'Privilege: SeEnableDelegationPrivilege' do
-    subject { user_right('SeEnableDelegationPrivilege') }
+    subject { user_right('SeEnableDelegationPrivilege').value }
     it { should eq [] }
   end
 end
@@ -585,7 +585,7 @@ control 'cis-2.2.30' do
   tag cis_id: '2.2.30'
 
   describe 'Privilege: SeRemoteShutdownPrivilege' do
-    subject { user_right('SeRemoteShutdownPrivilege') }
+    subject { user_right('SeRemoteShutdownPrivilege').value }
     it { should include 'Administrators' }
   end
 end
@@ -604,7 +604,7 @@ control 'cis-2.2.31' do
   tag cis_id: '2.2.31'
 
   describe 'Privilege: SeAuditPrivilege' do
-    subject { user_right('SeAuditPrivilege') }
+    subject { user_right('SeAuditPrivilege').value }
     it { should include 'LOCAL SERVICE' }
     it { should include 'NETWORK SERVICE' }
   end
@@ -624,7 +624,7 @@ control 'cis-2.2.32' do
   tag cis_id: '2.2.32'
 
   describe 'Privilege: SeImpersonatePrivilege' do
-    subject { user_right('SeImpersonatePrivilege') }
+    subject { user_right('SeImpersonatePrivilege').value }
     it { should include 'Administrators' }
     it { should include 'LOCAL SERVICE' }
     it { should include 'NETWORK SERVICE' }
@@ -646,7 +646,7 @@ control 'cis-2.2.33' do
   tag cis_id: '2.2.33'
 
   describe 'Privilege: SeImpersonatePrivilege' do
-    subject { user_right('SeImpersonatePrivilege') }
+    subject { user_right('SeImpersonatePrivilege').value }
     it { should include 'Administrators' }
     it { should include 'LOCAL SERVICE' }
     it { should include 'NETWORK SERVICE' }
@@ -668,7 +668,7 @@ control 'cis-2.2.34' do
   tag cis_id: '2.2.34'
 
   describe 'Privilege: SeIncreaseBasePriorityPrivilege' do
-    subject { user_right('SeIncreaseBasePriorityPrivilege') }
+    subject { user_right('SeIncreaseBasePriorityPrivilege').value }
     it { should include 'Administrators' }
     it { should include 'Window Manager\\Window Manager Group' }
   end
@@ -688,7 +688,7 @@ control 'cis-2.2.35' do
   tag cis_id: '2.2.35'
 
   describe 'Privilege: SeLoadDriverPrivilege' do
-    subject { user_right('SeLoadDriverPrivilege') }
+    subject { user_right('SeLoadDriverPrivilege').value }
     it { should include 'Administrators' }
   end
 end
@@ -707,7 +707,7 @@ control 'cis-2.2.36' do
   tag cis_id: '2.2.36'
 
   describe 'Privilege: SeLockMemoryPrivilege' do
-    subject { user_right('SeLockMemoryPrivilege') }
+    subject { user_right('SeLockMemoryPrivilege').value }
     it { should eq [] }
   end
 end
@@ -726,7 +726,7 @@ control 'cis-2.2.37' do
   tag cis_id: '2.2.37'
 
   describe 'Privilege: SeBatchLogonRight' do
-    subject { user_right('SeBatchLogonRight') }
+    subject { user_right('SeBatchLogonRight').value }
     it { should include 'Administrators' }
   end
 end
@@ -745,7 +745,7 @@ control 'cis-2.2.38' do
   tag cis_id: '2.2.38'
 
   describe 'Privilege: SeServiceLogonRight' do
-    subject { user_right('SeServiceLogonRight') }
+    subject { user_right('SeServiceLogonRight').value }
     it { should eq [] }
   end
 end
@@ -764,7 +764,7 @@ control 'cis-2.2.39' do
   tag cis_id: '2.2.39'
 
   describe 'Privilege: SeSecurityPrivilege' do
-    subject { user_right('SeSecurityPrivilege') }
+    subject { user_right('SeSecurityPrivilege').value }
     it { should include 'Administrators' }
   end
 end
@@ -783,7 +783,7 @@ control 'cis-2.2.40' do
   tag cis_id: '2.2.40'
 
   describe 'Privilege: SeReLabelPrivilege' do
-    subject { user_right('SeReLabelPrivilege') }
+    subject { user_right('SeReLabelPrivilege').value }
     it { should eq [] }
   end
 end
