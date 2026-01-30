@@ -8,8 +8,8 @@
 #   user_right('SeDenyNetworkLogonRight')
 #
 # Notes:
-# - Tries secedit export (interactive + WinRM‑friendly)
-# - Falls back to WMI/registry for core CIS 1.1.x/1.2.x values
+# - Bulletproof nil handling for secedit failures under WinRM
+# - WMI fallback for CIS 1.1.x/1.2.x password/lockout policies
 # - Requires local admin
 
 require 'tmpdir'
@@ -28,11 +28,17 @@ class SeceditPolicy
 
     # Try basic export (matches interactive)
     cmd = @inspec.command(%(cmd.exe /c secedit /export /cfg "#{cfg}" /quiet))
-    return parse_ini(@inspec.file(cfg).content) if cmd.exit_status == 0
+    if cmd.exit_status == 0 && @inspec.file(cfg).exist?
+      @cache = parse_ini(@inspec.file(cfg).content)
+      return @cache
+    end
 
     # Try explicit areas (WinRM‑friendly)
     cmd = @inspec.command(%(cmd.exe /c secedit /export /cfg "#{cfg}" /areas SECURITYPOLICY USER_RIGHTS /quiet))
-    return parse_ini(@inspec.file(cfg).content) if cmd.exit_status == 0
+    if cmd.exit_status == 0 && @inspec.file(cfg).exist?
+      @cache = parse_ini(@inspec.file(cfg).content)
+      return @cache
+    end
 
     # WMI fallback for core CIS password/lockout policies
     @inspec.stderr.puts "secedit export failed (both attempts), using WMI fallback"
@@ -108,7 +114,7 @@ class LocalSecurityPolicy < Inspec.resource(1)
 
   def initialize
     super()
-    @policy = SeceditPolicy.new(inspec).export_and_parse
+    @policy = SeceditPolicy.new(inspec).export_and_parse || {}
   end
 
   # Allow: its('PasswordHistorySize') { should cmp 24 }
@@ -131,8 +137,11 @@ class LocalSecurityPolicy < Inspec.resource(1)
   private
 
   def lookup_key(key)
+    return nil unless @policy.is_a?(Hash)
+
     %w[System Access Event Audit Registry Values].each do |section|
-      return @policy[section][key] if @policy[section] && @policy[section].key?(key)
+      section_hash = @policy[section]
+      return section_hash[key] if section_hash.is_a?(Hash) && section_hash.key?(key)
     end
     nil
   end
@@ -154,7 +163,7 @@ class UserRight < Inspec.resource(1)
   def initialize(right_name)
     super()
     @right  = right_name.to_s
-    @policy = SeceditPolicy.new(inspec).export_and_parse
+    @policy = SeceditPolicy.new(inspec).export_and_parse || {}
   end
 
   def to_s
@@ -162,8 +171,13 @@ class UserRight < Inspec.resource(1)
   end
 
   def value
-    # Safe nil check for when secedit fails
-    raw = @policy.dig('Privilege Rights', @right)
+    # Bulletproof nil handling - return empty array if anything fails
+    return [] unless @policy.is_a?(Hash)
+
+    priv_rights = @policy['Privilege Rights']
+    return [] unless priv_rights.is_a?(Hash)
+
+    raw = priv_rights[@right]
     return [] if raw.nil? || raw.strip.empty?
 
     raw.split(',').map { |s| s.strip.sub(/^\*/, '') }.reject(&:empty?)
