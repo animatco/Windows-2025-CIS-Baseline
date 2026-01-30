@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 #
-# Local Security Policy export parser (secedit + registry fallback)
-# Windows Server 2012R2 → 2025 compatible
-# WinRM‑safe (no profile temp dirs)
+# Local Security Policy export parser
+# - Uses secedit for SECURITYPOLICY + USER_RIGHTS
+# - Falls back to registry for System Access + Security Options
+# - Windows Server 2012R2 → 2025 compatible
+# - WinRM‑safe (no profile temp dirs)
 #
 
 class SeceditPolicy
@@ -14,56 +16,72 @@ class SeceditPolicy
     @cache  = nil
   end
 
+  #
+  # Main entry point
+  #
   def export_and_parse
     return @cache if @cache
 
-    #
-    # Remove stale file (no `.run` — Inspec executes automatically)
-    #
-    @inspec.command(%(cmd.exe /c del /f /q "#{EXPORT_CFG}" 2>nul))
+    cleanup_stale_export
+    run_secedit_export
 
-    #
-    # WinRM‑safe secedit export
-    #
-    cmd = @inspec.command(%(cmd.exe /c secedit /export /cfg "#{EXPORT_CFG}" /areas SECURITYPOLICY USER_RIGHTS /quiet))
-
-    if cmd.exit_status == 0 &&
-       @inspec.file(EXPORT_CFG).exist? &&
-       @inspec.file(EXPORT_CFG).size > 0
-
-      @cache = parse_ini(@inspec.file(EXPORT_CFG).content)
+    if export_successful?
+      @cache = parse_ini(read_export_file)
       return @cache
     end
 
     #
-    # Registry fallback for password/lockout policy
+    # Registry fallback (System Access + Security Options)
     #
     @cache = {
-      'System Access' => {
-        'PasswordHistorySize'       => registry_policy('PasswordHistorySize'),
-        'MaximumPasswordAge'        => registry_policy('MaximumPasswordAge'),
-        'MinimumPasswordAge'        => registry_policy('MinimumPasswordAge'),
-        'MinimumPasswordLength'     => registry_policy('MinimumPasswordLength'),
-        'PasswordComplexity'        => registry_policy('PasswordComplexity'),
-        'LockoutBadCount'           => registry_policy('LockoutBadCount'),
-        'ResetLockoutCount'         => registry_policy('ResetLockoutCount'),
-        'LockoutDuration'           => registry_policy('LockoutDuration'),
-        'AllowAdministratorLockout' => registry_policy('AllowAdministratorLockout'),
-        'ClearTextPassword'         => registry_policy('ClearTextPassword')
-      }
+      'System Access'     => registry_system_access,
+      'Privilege Rights'  => {}, # cannot be reliably reconstructed from registry
+      'Security Options'  => registry_security_options
     }
+
+    @cache
   end
 
   private
 
   #
-  # INI parser for secedit export
+  # Remove stale export file
+  #
+  def cleanup_stale_export
+    @inspec.command(%(cmd.exe /c del /f /q "#{EXPORT_CFG}" 2>nul))
+  end
+
+  #
+  # Execute secedit export
+  #
+  def run_secedit_export
+    @inspec.command(%(cmd.exe /c secedit /export /cfg "#{EXPORT_CFG}" /areas SECURITYPOLICY USER_RIGHTS /quiet))
+  end
+
+  #
+  # Check if export succeeded
+  #
+  def export_successful?
+    @inspec.file(EXPORT_CFG).exist? &&
+      @inspec.file(EXPORT_CFG).size > 0
+  end
+
+  #
+  # Read exported file content
+  #
+  def read_export_file
+    @inspec.file(EXPORT_CFG).content.to_s
+  end
+
+  #
+  # INI parser
   #
   def parse_ini(text)
     out     = Hash.new { |h, k| h[k] = {} }
     current = nil
 
-    text.to_s.each_line do |line|
+    text.encode!('UTF-8', invalid: :replace, undef: :replace, replace: '')
+    text.each_line do |line|
       line = line.strip
       next if line.empty? || line.start_with?(';')
 
@@ -85,17 +103,62 @@ class SeceditPolicy
   end
 
   #
-  # Registry fallback for password/lockout policy
+  # Registry fallback: System Access
   #
-  def registry_policy(key)
+  def registry_system_access
+    keys = %w[
+      PasswordHistorySize
+      MaximumPasswordAge
+      MinimumPasswordAge
+      MinimumPasswordLength
+      PasswordComplexity
+      LockoutBadCount
+      ResetLockoutCount
+      LockoutDuration
+      AllowAdministratorLockout
+      ClearTextPassword
+    ]
+
+    keys.each_with_object({}) do |k, h|
+      h[k] = registry_read(
+        'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Lsa',
+        k
+      )
+    end
+  end
+
+  #
+  # Registry fallback: Security Options
+  #
+  def registry_security_options
+    {
+      'EnableAdminAccount'                => registry_read('HKLM:\\SAM\\SAM\\Domains\\Account\\Users\\000001F4', 'F'),
+      'EnableGuestAccount'                => registry_read('HKLM:\\SAM\\SAM\\Domains\\Account\\Users\\000001F5', 'F'),
+      'LimitBlankPasswordUse'             => registry_read('HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Lsa', 'LimitBlankPasswordUse'),
+      'SCENoApplyLegacyAuditPolicy'       => registry_read('HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Lsa', 'SCENoApplyLegacyAuditPolicy'),
+      'AddPrinterDrivers'                 => registry_read('HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Print\\Providers\\LanMan Print Services\\Servers', 'AddPrinterDrivers'),
+      'RequireSignOrSeal'                 => registry_read('HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Netlogon\\Parameters', 'RequireSignOrSeal'),
+      'SealSecureChannel'                 => registry_read('HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Netlogon\\Parameters', 'SealSecureChannel'),
+      'SignSecureChannel'                 => registry_read('HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Netlogon\\Parameters', 'SignSecureChannel'),
+      'RequireStrongKey'                  => registry_read('HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Netlogon\\Parameters', 'RequireStrongKey'),
+      'DisableCAD'                        => registry_read('HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System', 'DisableCAD'),
+      'InactivityTimeoutSecs'             => registry_read('HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System', 'InactivityTimeoutSecs'),
+      'RequireSecuritySignature'          => registry_read('HKLM:\\SYSTEM\\CurrentControlSet\\Services\\LanmanWorkstation\\Parameters', 'RequireSecuritySignature'),
+      'EnableSecuritySignature'           => registry_read('HKLM:\\SYSTEM\\CurrentControlSet\\Services\\LanmanWorkstation\\Parameters', 'EnableSecuritySignature')
+    }
+  end
+
+  #
+  # Registry reader (typed)
+  #
+  def registry_read(path, key)
     ps = <<~POWERSHELL
-      $p = Get-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Netlogon\\Parameters' -ErrorAction SilentlyContinue
+      $p = Get-ItemProperty -Path '#{path}' -ErrorAction SilentlyContinue
       if ($p -and ($p.PSObject.Properties.Name -contains '#{key}')) {
         $p.#{key}
       }
     POWERSHELL
 
-    # Let Ruby escape the script safely
     cmd = @inspec.command("powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command #{ps.inspect}")
     return nil unless cmd.exit_status == 0
 
@@ -137,7 +200,7 @@ class LocalSecurityPolicy < Inspec.resource(1)
   private
 
   #
-  # Dynamic section scanning (future‑proof)
+  # Dynamic section scanning
   #
   def lookup_key(key)
     return nil unless @policy.is_a?(Hash)
@@ -184,7 +247,9 @@ class UserRight < Inspec.resource(1)
     raw = rights[@right]
     return [] if raw.nil? || raw.strip.empty?
 
-    raw.split(',').map { |s| s.strip.sub(/^\*/, '') }.reject(&:empty?)
+    raw.split(',')
+       .map { |s| s.strip.sub(/^\*/, '') }
+       .reject(&:empty?)
   end
 
   def method_missing(name, *args)
