@@ -36,3 +36,5 @@ if defined?(Object) && defined?(self)
   end
 end
 
+# Ensure controls can always resolve the constant, regardless of InSpec load context.
+Object.const_set(:CisPrivilege, CisPrivilege) unless Object.const_defined?(:CisPrivilege)

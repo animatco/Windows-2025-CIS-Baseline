@@ -31,3 +31,5 @@ if defined?(Object) && defined?(self)
   end
 end
 
+# Ensure controls can always resolve the constant, regardless of InSpec load context.
+Object.const_set(:CisAuditPolicy, CisAuditPolicy) unless Object.const_defined?(:CisAuditPolicy)
