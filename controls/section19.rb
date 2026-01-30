@@ -9,8 +9,10 @@ control 'cis-19.5.1.1' do
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 19.5.1.1.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Section 19 controls disabled') { input('run_section_19', value: true) }
-
-  only_if("Not applicable: requires server_role 'member_server' or 'domain_controller' (server_role=#{input('server_role', value: 'unset')})") { input('server_role', value: '') == 'domain_controller' || input('server_role', value: '') == 'member_server' }
+  role = input('server_role', value: '').to_s.strip.downcase
+  only_if("Not applicable: requires server_role member_server or domain_controller (server_role=#{role})") do
+    %w[member_server domain_controller].include?(role)
+  end
   tag cis_id: '19.5.1.1'
   describe registry_key('HKEY_USERS\\{{ item }}\\SOFTWARE\\Policies\\Microsoft\\Windows\\CurrentVersion\\Pushnotifications') do
     its('NoToastApplicationNotificationOnLockScreen') { should cmp 1 }
@@ -23,8 +25,10 @@ control 'cis-19.6.6.1.1' do
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 19.6.6.1.1.'
   only_if('Level 2 controls disabled') { input('run_level_2') }
   only_if('Section 19 controls disabled') { input('run_section_19', value: true) }
-
-  only_if("Not applicable: requires server_role 'member_server' or 'domain_controller' (server_role=#{input('server_role', value: 'unset')})") { input('server_role', value: '') == 'domain_controller' || input('server_role', value: '') == 'member_server' }
+  role = input('server_role', value: '').to_s.strip.downcase
+  only_if("Not applicable: requires server_role member_server or domain_controller (server_role=#{role})") do
+    %w[member_server domain_controller].include?(role)
+  end
   tag cis_id: '19.6.6.1.1'
   describe registry_key('HKEY_USERS\\{{ item }}\\SOFTWARE\\Policies\\Microsoft\\Assistance\\Client\\1.0') do
     its('NoImplicitFeedback') { should cmp 1 }
@@ -37,8 +41,10 @@ control 'cis-19.7.5.1' do
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 19.7.5.1.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Section 19 controls disabled') { input('run_section_19', value: true) }
-
-  only_if("Not applicable: requires server_role 'member_server' or 'domain_controller' (server_role=#{input('server_role', value: 'unset')})") { input('server_role', value: '') == 'domain_controller' || input('server_role', value: '') == 'member_server' }
+  role = input('server_role', value: '').to_s.strip.downcase
+  only_if("Not applicable: requires server_role member_server or domain_controller (server_role=#{role})") do
+    %w[member_server domain_controller].include?(role)
+  end
   tag cis_id: '19.7.5.1'
   describe registry_key('HKEY_USERS\\{{ item }}\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\Attachments') do
     its('SaveZoneInformation') { should cmp 2 }
@@ -51,8 +57,10 @@ control 'cis-19.7.5.2' do
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 19.7.5.2.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Section 19 controls disabled') { input('run_section_19', value: true) }
-
-  only_if("Not applicable: requires server_role 'member_server' or 'domain_controller' (server_role=#{input('server_role', value: 'unset')})") { input('server_role', value: '') == 'domain_controller' || input('server_role', value: '') == 'member_server' }
+  role = input('server_role', value: '').to_s.strip.downcase
+  only_if("Not applicable: requires server_role member_server or domain_controller (server_role=#{role})") do
+    %w[member_server domain_controller].include?(role)
+  end
   tag cis_id: '19.7.5.2'
   describe registry_key('HKEY_USERS\\{{ item }}\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\Attachments') do
     its('ScanWithAntiVirus') { should cmp 3 }
@@ -65,8 +73,10 @@ control 'cis-19.7.8.1' do
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 19.7.8.1.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Section 19 controls disabled') { input('run_section_19', value: true) }
-
-  only_if("Not applicable: requires server_role 'member_server' or 'domain_controller' (server_role=#{input('server_role', value: 'unset')})") { input('server_role', value: '') == 'domain_controller' || input('server_role', value: '') == 'member_server' }
+  role = input('server_role', value: '').to_s.strip.downcase
+  only_if("Not applicable: requires server_role member_server or domain_controller (server_role=#{role})") do
+    %w[member_server domain_controller].include?(role)
+  end
   tag cis_id: '19.7.8.1'
   describe registry_key('HKEY_USERS\\{{ item }}\\SOFTWARE\\Policies\\Microsoft\\Windows\\CloudContent') do
     its('ConfigureWindowsSpotlight') { should cmp 2 }
@@ -79,8 +89,10 @@ control 'cis-19.7.8.2' do
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 19.7.8.2.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Section 19 controls disabled') { input('run_section_19', value: true) }
-
-  only_if("Not applicable: requires server_role 'member_server' or 'domain_controller' (server_role=#{input('server_role', value: 'unset')})") { input('server_role', value: '') == 'domain_controller' || input('server_role', value: '') == 'member_server' }
+  role = input('server_role', value: '').to_s.strip.downcase
+  only_if("Not applicable: requires server_role member_server or domain_controller (server_role=#{role})") do
+    %w[member_server domain_controller].include?(role)
+  end
   tag cis_id: '19.7.8.2'
   describe registry_key('HKEY_USERS\\{{ item }}\\SOFTWARE\\Policies\\Microsoft\\Windows\\CloudContent') do
     its('DisableThirdPartySuggestions') { should cmp 1 }
@@ -93,8 +105,10 @@ control 'cis-19.7.8.3' do
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 19.7.8.3.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Section 19 controls disabled') { input('run_section_19', value: true) }
-
-  only_if("Not applicable: requires server_role 'member_server' or 'domain_controller' (server_role=#{input('server_role', value: 'unset')})") { input('server_role', value: '') == 'domain_controller' || input('server_role', value: '') == 'member_server' }
+  role = input('server_role', value: '').to_s.strip.downcase
+  only_if("Not applicable: requires server_role member_server or domain_controller (server_role=#{role})") do
+    %w[member_server domain_controller].include?(role)
+  end
   tag cis_id: '19.7.8.3'
   describe registry_key('HKEY_USERS\\{{ item }}\\SOFTWARE\\Policies\\Microsoft\\Windows\\CloudContent') do
     its('DisableTailoredExperiencesWithDiagnosticData') { should cmp 1 }
@@ -107,8 +121,10 @@ control 'cis-19.7.8.4' do
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 19.7.8.4.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Section 19 controls disabled') { input('run_section_19', value: true) }
-
-  only_if("Not applicable: requires server_role 'member_server' or 'domain_controller' (server_role=#{input('server_role', value: 'unset')})") { input('server_role', value: '') == 'domain_controller' || input('server_role', value: '') == 'member_server' }
+  role = input('server_role', value: '').to_s.strip.downcase
+  only_if("Not applicable: requires server_role member_server or domain_controller (server_role=#{role})") do
+    %w[member_server domain_controller].include?(role)
+  end
   tag cis_id: '19.7.8.4'
   describe registry_key('HKEY_USERS\\{{ item }}\\SOFTWARE\\Policies\\Microsoft\\Windows\\CloudContent') do
     its('DisableWindowsSpotlightFeatures') { should cmp 1 }
@@ -121,8 +137,10 @@ control 'cis-19.7.8.5' do
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 19.7.8.5.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Section 19 controls disabled') { input('run_section_19', value: true) }
-
-  only_if("Not applicable: requires server_role 'member_server' or 'domain_controller' (server_role=#{input('server_role', value: 'unset')})") { input('server_role', value: '') == 'domain_controller' || input('server_role', value: '') == 'member_server' }
+  role = input('server_role', value: '').to_s.strip.downcase
+  only_if("Not applicable: requires server_role member_server or domain_controller (server_role=#{role})") do
+    %w[member_server domain_controller].include?(role)
+  end
   tag cis_id: '19.7.8.5'
   describe registry_key('HKEY_USERS\\{{ item }}\\SOFTWARE\\Policies\\Microsoft\\Windows\\CloudContent') do
     its('DisableSpotlightCollectionOnDesktop') { should cmp 1 }
@@ -135,8 +153,10 @@ control 'cis-19.7.26.1' do
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 19.7.26.1.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Section 19 controls disabled') { input('run_section_19', value: true) }
-
-  only_if("Not applicable: requires server_role 'member_server' or 'domain_controller' (server_role=#{input('server_role', value: 'unset')})") { input('server_role', value: '') == 'domain_controller' || input('server_role', value: '') == 'member_server' }
+  role = input('server_role', value: '').to_s.strip.downcase
+  only_if("Not applicable: requires server_role member_server or domain_controller (server_role=#{role})") do
+    %w[member_server domain_controller].include?(role)
+  end
   tag cis_id: '19.7.26.1'
   describe registry_key('HKEY_USERS\\{{ item }}\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer') do
     its('NoInplaceSharing') { should cmp 1 }
@@ -149,8 +169,10 @@ control 'cis-19.7.44.1' do
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 19.7.44.1.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Section 19 controls disabled') { input('run_section_19', value: true) }
-
-  only_if("Not applicable: requires server_role 'member_server' or 'domain_controller' (server_role=#{input('server_role', value: 'unset')})") { input('server_role', value: '') == 'domain_controller' || input('server_role', value: '') == 'member_server' }
+  role = input('server_role', value: '').to_s.strip.downcase
+  only_if("Not applicable: requires server_role member_server or domain_controller (server_role=#{role})") do
+    %w[member_server domain_controller].include?(role)
+  end
   tag cis_id: '19.7.44.1'
   describe registry_key('HKEY_USERS\\{{ item }}\\SOFTWARE\\Policies\\Microsoft\\Windows\\Installer') do
     its('AlwaysInstallElevated') { should cmp 0 }
@@ -163,8 +185,10 @@ control 'cis-19.7.46.2.1' do
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 19.7.46.2.1.'
   only_if('Level 2 controls disabled') { input('run_level_2') }
   only_if('Section 19 controls disabled') { input('run_section_19', value: true) }
-
-  only_if("Not applicable: requires server_role 'member_server' or 'domain_controller' (server_role=#{input('server_role', value: 'unset')})") { input('server_role', value: '') == 'domain_controller' || input('server_role', value: '') == 'member_server' }
+  role = input('server_role', value: '').to_s.strip.downcase
+  only_if("Not applicable: requires server_role member_server or domain_controller (server_role=#{role})") do
+    %w[member_server domain_controller].include?(role)
+  end
   tag cis_id: '19.7.46.2.1'
   describe registry_key('HKEY_USERS\\{{ item }}\\SOFTWARE\\Policies\\Microsoft\\Windowsmediaplayer') do
     its('PreventCodecDownload') { should cmp 1 }
