@@ -32,9 +32,10 @@ control 'cis-1.1.2' do
 
   tag cis_id: '1.1.2'
 
-  describe local_security_policy do
-    its('MaximumPasswordAge') { should cmp <= 365 }
-    its('MaximumPasswordAge') { should_not cmp 0 }
+  describe 'Maximum password age (days)' do
+    subject { CisHelpers.cis_password_age_days(local_security_policy.MaximumPasswordAge) }
+    it { should be <= 365 }
+    it { should be > 0 }
   end
 end
 
