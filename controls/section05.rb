@@ -4,14 +4,12 @@
 #  Section 05 — System Services
 ###############################################
 
-require_relative File.join(__dir__, '..', 'libraries', 'cis_password_policy')
-require_relative File.join(__dir__, '..', 'libraries', 'cis_privilege')
-require_relative File.join(__dir__, '..', 'libraries', 'cis_audit_policy')
-require_relative File.join(__dir__, '..', 'libraries', 'cis_security_options')
-
-require_relative File.join(__dir__, '..', 'libraries', 'local_policy_export')
-require_relative File.join(__dir__, '..', 'libraries', 'user_right')
-
+require inspec.profile.file('libraries/cis_password_policy.rb')
+require inspec.profile.file('libraries/cis_privilege.rb')
+require inspec.profile.file('libraries/cis_audit_policy.rb')
+require inspec.profile.file('libraries/cis_security_options.rb')
+require inspec.profile.file('libraries/local_policy_export.rb')
+require inspec.profile.file('libraries/user_right.rb')
 
 only_if("Section 05 disabled by input") do
   input("run_section_05")
