@@ -26,6 +26,3 @@ module CisHelpers
     (value.to_i / 86_400)
   end
 end
-
-# Register helper module with Inspec
-Inspec::ProfileContext.add_helper_module(CisHelpers)
