@@ -4,4 +4,3 @@ module SectionToggle
   end
 end
 
-Inspec::DSL.include(SectionToggle)
