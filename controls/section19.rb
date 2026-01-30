@@ -9,7 +9,8 @@ control 'cis-19.5.1.1' do
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 19.5.1.1.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Section 19 controls disabled') { input('run_section_19', value: true) }
-  role = input('server_role', value: '').to_s.strip.downcase
+
+role = input('server_role', value: '').to_s.strip.downcase
   only_if("Not applicable: requires server_role member_server or domain_controller (server_role=#{role})") do
     %w[member_server domain_controller].include?(role)
   end
@@ -25,7 +26,8 @@ control 'cis-19.6.6.1.1' do
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 19.6.6.1.1.'
   only_if('Level 2 controls disabled') { input('run_level_2') }
   only_if('Section 19 controls disabled') { input('run_section_19', value: true) }
-  role = input('server_role', value: '').to_s.strip.downcase
+
+role = input('server_role', value: '').to_s.strip.downcase
   only_if("Not applicable: requires server_role member_server or domain_controller (server_role=#{role})") do
     %w[member_server domain_controller].include?(role)
   end
@@ -41,7 +43,8 @@ control 'cis-19.7.5.1' do
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 19.7.5.1.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Section 19 controls disabled') { input('run_section_19', value: true) }
-  role = input('server_role', value: '').to_s.strip.downcase
+
+role = input('server_role', value: '').to_s.strip.downcase
   only_if("Not applicable: requires server_role member_server or domain_controller (server_role=#{role})") do
     %w[member_server domain_controller].include?(role)
   end
@@ -57,7 +60,8 @@ control 'cis-19.7.5.2' do
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 19.7.5.2.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Section 19 controls disabled') { input('run_section_19', value: true) }
-  role = input('server_role', value: '').to_s.strip.downcase
+
+role = input('server_role', value: '').to_s.strip.downcase
   only_if("Not applicable: requires server_role member_server or domain_controller (server_role=#{role})") do
     %w[member_server domain_controller].include?(role)
   end
@@ -73,7 +77,8 @@ control 'cis-19.7.8.1' do
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 19.7.8.1.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Section 19 controls disabled') { input('run_section_19', value: true) }
-  role = input('server_role', value: '').to_s.strip.downcase
+
+role = input('server_role', value: '').to_s.strip.downcase
   only_if("Not applicable: requires server_role member_server or domain_controller (server_role=#{role})") do
     %w[member_server domain_controller].include?(role)
   end
@@ -89,7 +94,8 @@ control 'cis-19.7.8.2' do
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 19.7.8.2.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Section 19 controls disabled') { input('run_section_19', value: true) }
-  role = input('server_role', value: '').to_s.strip.downcase
+
+role = input('server_role', value: '').to_s.strip.downcase
   only_if("Not applicable: requires server_role member_server or domain_controller (server_role=#{role})") do
     %w[member_server domain_controller].include?(role)
   end
@@ -105,7 +111,8 @@ control 'cis-19.7.8.3' do
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 19.7.8.3.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Section 19 controls disabled') { input('run_section_19', value: true) }
-  role = input('server_role', value: '').to_s.strip.downcase
+
+role = input('server_role', value: '').to_s.strip.downcase
   only_if("Not applicable: requires server_role member_server or domain_controller (server_role=#{role})") do
     %w[member_server domain_controller].include?(role)
   end
@@ -121,7 +128,8 @@ control 'cis-19.7.8.4' do
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 19.7.8.4.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Section 19 controls disabled') { input('run_section_19', value: true) }
-  role = input('server_role', value: '').to_s.strip.downcase
+
+role = input('server_role', value: '').to_s.strip.downcase
   only_if("Not applicable: requires server_role member_server or domain_controller (server_role=#{role})") do
     %w[member_server domain_controller].include?(role)
   end
@@ -137,7 +145,8 @@ control 'cis-19.7.8.5' do
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 19.7.8.5.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Section 19 controls disabled') { input('run_section_19', value: true) }
-  role = input('server_role', value: '').to_s.strip.downcase
+
+role = input('server_role', value: '').to_s.strip.downcase
   only_if("Not applicable: requires server_role member_server or domain_controller (server_role=#{role})") do
     %w[member_server domain_controller].include?(role)
   end
@@ -153,7 +162,8 @@ control 'cis-19.7.26.1' do
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 19.7.26.1.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Section 19 controls disabled') { input('run_section_19', value: true) }
-  role = input('server_role', value: '').to_s.strip.downcase
+
+role = input('server_role', value: '').to_s.strip.downcase
   only_if("Not applicable: requires server_role member_server or domain_controller (server_role=#{role})") do
     %w[member_server domain_controller].include?(role)
   end
@@ -169,7 +179,8 @@ control 'cis-19.7.44.1' do
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 19.7.44.1.'
   only_if('Level 1 controls disabled') { input('run_level_1') }
   only_if('Section 19 controls disabled') { input('run_section_19', value: true) }
-  role = input('server_role', value: '').to_s.strip.downcase
+
+role = input('server_role', value: '').to_s.strip.downcase
   only_if("Not applicable: requires server_role member_server or domain_controller (server_role=#{role})") do
     %w[member_server domain_controller].include?(role)
   end
@@ -185,7 +196,8 @@ control 'cis-19.7.46.2.1' do
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 19.7.46.2.1.'
   only_if('Level 2 controls disabled') { input('run_level_2') }
   only_if('Section 19 controls disabled') { input('run_section_19', value: true) }
-  role = input('server_role', value: '').to_s.strip.downcase
+
+role = input('server_role', value: '').to_s.strip.downcase
   only_if("Not applicable: requires server_role member_server or domain_controller (server_role=#{role})") do
     %w[member_server domain_controller].include?(role)
   end
