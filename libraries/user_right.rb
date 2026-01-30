@@ -1,4 +1,4 @@
-class UserRight < Inspec.resource(1)
+﻿class UserRight < Inspec.resource(1)
   name 'user_right'
   desc 'Reads User Rights Assignment (Privilege Rights) via secedit export.'
   supports platform: 'windows'
@@ -63,3 +63,12 @@ class UserRight < Inspec.resource(1)
     WELL_KNOWN_SIDS.fetch(sid, sid)
   end
 end
+
+# Ensure controls can always resolve constants, regardless of InSpec load context.
+if defined?(Object) && defined?(self)
+  constants.each do |c|
+    next if Object.const_defined?(c)
+    Object.const_set(c, const_get(c))
+  end
+end
+

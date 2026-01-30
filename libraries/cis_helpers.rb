@@ -1,4 +1,4 @@
-# frozen_string_literal: true
+﻿# frozen_string_literal: true
 
 module CisHelpers
   def cis_password_age_days(value)
@@ -7,3 +7,12 @@ module CisHelpers
     (value.to_i / 86_400)
   end
 end
+
+# Ensure controls can always resolve constants, regardless of InSpec load context.
+if defined?(Object) && defined?(self)
+  constants.each do |c|
+    next if Object.const_defined?(c)
+    Object.const_set(c, const_get(c))
+  end
+end
+

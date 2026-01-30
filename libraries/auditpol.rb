@@ -1,4 +1,4 @@
-# frozen_string_literal: true
+﻿# frozen_string_literal: true
 
 # Resource: auditpol_subcategory('{GUID}')
 # Provides: inclusion_setting
@@ -24,3 +24,12 @@ class AuditpolSubcategory < Inspec.resource(1)
     "AuditPol subcategory #{@guid}"
   end
 end
+
+# Ensure controls can always resolve constants, regardless of InSpec load context.
+if defined?(Object) && defined?(self)
+  constants.each do |c|
+    next if Object.const_defined?(c)
+    Object.const_set(c, const_get(c))
+  end
+end
+
