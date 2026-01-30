@@ -2,6 +2,8 @@
 
 #
 # Local Security Policy export parser (secedit + registry fallback)
+# Windows Server 2012R2 → 2025 compatible
+# WinRM‑safe (no profile temp dirs)
 #
 
 class SeceditPolicy
@@ -15,10 +17,14 @@ class SeceditPolicy
   def export_and_parse
     return @cache if @cache
 
-    # Remove stale file
-    @inspec.command(%(cmd.exe /c del /f /q "#{EXPORT_CFG}" 2>nul)).run
+    #
+    # Remove stale file (no `.run` — Inspec executes automatically)
+    #
+    @inspec.command(%(cmd.exe /c del /f /q "#{EXPORT_CFG}" 2>nul))
 
-    # WinRM-safe export
+    #
+    # WinRM‑safe secedit export
+    #
     cmd = @inspec.command(%(cmd.exe /c secedit /export /cfg "#{EXPORT_CFG}" /areas SECURITYPOLICY USER_RIGHTS /quiet))
 
     if cmd.exit_status == 0 &&
@@ -29,7 +35,9 @@ class SeceditPolicy
       return @cache
     end
 
+    #
     # Registry fallback for password/lockout policy
+    #
     @cache = {
       'System Access' => {
         'PasswordHistorySize'       => registry_policy('PasswordHistorySize'),
@@ -48,6 +56,9 @@ class SeceditPolicy
 
   private
 
+  #
+  # INI parser for secedit export
+  #
   def parse_ini(text)
     out     = Hash.new { |h, k| h[k] = {} }
     current = nil
@@ -73,7 +84,9 @@ class SeceditPolicy
     out
   end
 
+  #
   # Registry fallback for password/lockout policy
+  #
   def registry_policy(key)
     ps = <<~POWERSHELL
       $p = Get-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Netlogon\\Parameters' -ErrorAction SilentlyContinue
@@ -82,7 +95,7 @@ class SeceditPolicy
       }
     POWERSHELL
 
-    # Let Ruby escape the script correctly
+    # Let Ruby escape the script safely
     cmd = @inspec.command("powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command #{ps.inspect}")
     return nil unless cmd.exit_status == 0
 
@@ -123,6 +136,9 @@ class LocalSecurityPolicy < Inspec.resource(1)
 
   private
 
+  #
+  # Dynamic section scanning (future‑proof)
+  #
   def lookup_key(key)
     return nil unless @policy.is_a?(Hash)
 
