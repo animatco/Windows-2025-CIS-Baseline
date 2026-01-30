@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Local Security Policy export parser (secedit + WMI fallback)
+# Local Security Policy export parser (secedit + registry fallback)
 #
 # Exposes:
 #   local_security_policy.PasswordHistorySize
@@ -8,13 +8,14 @@
 #   user_right('SeDenyNetworkLogonRight')
 #
 # Notes:
-# - Bulletproof nil handling for secedit failures under WinRM
-# - WMI fallback for CIS 1.1.x/1.2.x password/lockout policies
+# - Uses a fixed, WinRM‑safe export path in C:\Windows\Temp
+# - Falls back to Netlogon\Parameters registry for core password/lockout policies
+# - Avoids brittle section name assumptions by scanning all sections
 # - Requires local admin
 
-require 'tmpdir'
-
 class SeceditPolicy
+  EXPORT_CFG_PATH = 'C:\\Windows\\Temp\\inspec-secpol.cfg').freeze
+
   def initialize(inspec)
     @inspec = inspec
     @cache  = nil
@@ -23,52 +24,34 @@ class SeceditPolicy
   def export_and_parse
     return @cache if @cache
 
-    dir = Dir.mktmpdir('inspec-secedit-')
-    cfg = File.join(dir, 'secpol.cfg')
+    # Best effort: remove any stale file first
+    @inspec.command(%(cmd.exe /c del /f /q "#{EXPORT_CFG_PATH}" 2>nul)).run
 
-    # Try basic export (matches interactive)
-    cmd = @inspec.command(%(cmd.exe /c secedit /export /cfg "#{cfg}" /quiet))
-    if cmd.exit_status == 0 && @inspec.file(cfg).exist?
-      @cache = parse_ini(@inspec.file(cfg).content)
+    # Single, explicit export attempt (WinRM‑friendly)
+    cmd = @inspec.command(%(cmd.exe /c secedit /export /cfg "#{EXPORT_CFG_PATH}" /areas SECURITYPOLICY USER_RIGHTS /quiet))
+
+    if cmd.exit_status == 0 && @inspec.file(EXPORT_CFG_PATH).exist? && @inspec.file(EXPORT_CFG_PATH).size > 0
+      @cache = parse_ini(@inspec.file(EXPORT_CFG_PATH).content)
       return @cache
     end
 
-    # Try explicit areas (WinRM‑friendly)
-    cmd = @inspec.command(%(cmd.exe /c secedit /export /cfg "#{cfg}" /areas SECURITYPOLICY USER_RIGHTS /quiet))
-    if cmd.exit_status == 0 && @inspec.file(cfg).exist?
-      @cache = parse_ini(@inspec.file(cfg).content)
-      return @cache
-    end
-
-    # WMI fallback for core CIS password/lockout policies
-    #@inspec.stderr.puts "secedit export failed (both attempts), using WMI fallback"
-    #@inspec.stderr.puts "secedit stderr: #{cmd.stderr}"
-
+    # Registry fallback for core password/lockout policies
     fallback = {
       'System Access' => {
-        'PasswordHistorySize'     => wmi_policy('PasswordHistorySize'),
-        'MaximumPasswordAge'      => wmi_policy('MaximumPasswordAge'),
-        'MinimumPasswordAge'      => wmi_policy('MinimumPasswordAge'),
-        'MinimumPasswordLength'   => wmi_policy('MinimumPasswordLength'),
-        'PasswordComplexity'      => wmi_policy('PasswordComplexity'),
-        'LockoutBadCount'         => wmi_policy('LockoutBadCount'),
-        'ResetLockoutCount'       => wmi_policy('ResetLockoutCount'),
-        'LockoutDuration'         => wmi_policy('LockoutDuration'),
-        'AllowAdministratorLockout' => wmi_policy('AllowAdministratorLockout'),
-        'ClearTextPassword'       => wmi_policy('ClearTextPassword')
+        'PasswordHistorySize'       => registry_policy('PasswordHistorySize'),
+        'MaximumPasswordAge'        => registry_policy('MaximumPasswordAge'),
+        'MinimumPasswordAge'        => registry_policy('MinimumPasswordAge'),
+        'MinimumPasswordLength'     => registry_policy('MinimumPasswordLength'),
+        'PasswordComplexity'        => registry_policy('PasswordComplexity'),
+        'LockoutBadCount'           => registry_policy('LockoutBadCount'),
+        'ResetLockoutCount'         => registry_policy('ResetLockoutCount'),
+        'LockoutDuration'           => registry_policy('LockoutDuration'),
+        'AllowAdministratorLockout' => registry_policy('AllowAdministratorLockout'),
+        'ClearTextPassword'         => registry_policy('ClearTextPassword')
       }
     }
 
     @cache = fallback
-    @cache
-  ensure
-    begin
-      if dir && dir.start_with?(Dir.tmpdir)
-        @inspec.command(%(cmd.exe /c rmdir /s /q "#{dir}")).run
-      end
-    rescue StandardError
-      # best effort cleanup
-    end
   end
 
   private
@@ -99,17 +82,39 @@ class SeceditPolicy
     out
   end
 
-  def wmi_policy(key)
-    cmd = @inspec.command(%(powershell.exe -c "Get-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Lsa' -Name '#{key}' -ErrorAction SilentlyContinue | Select-Object -ExpandProperty #{key}"))
-    return cmd.stdout.strip.to_i if cmd.exit_status == 0 && !cmd.stdout.strip.empty?
-    nil
+  # Registry fallback for password/lockout policy
+  #
+  # Most of these live under:
+  #   HKLM\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters
+  #
+  # Note: MaximumPasswordAge is stored in seconds.
+  def registry_policy(key)
+    ps = <<~POWERSHELL
+      $p = Get-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Netlogon\\Parameters' -ErrorAction SilentlyContinue
+      if ($p -and ($p.PSObject.Properties.Name -contains '#{key}')) {
+        $p.#{key}
+      }
+    POWERSHELL
+
+    cmd = @inspec.command(%(powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "#{ps.gsub("\n", ' ')}"))
+    return nil unless cmd.exit_status == 0
+
+    raw = cmd.stdout.to_s.strip
+    return nil if raw.empty?
+
+    # Convert to integer when possible
+    if raw.match?(/^[-]?\d+$/)
+      raw.to_i
+    else
+      raw
+    end
   end
 end
 
 # Resource: local_security_policy
 class LocalSecurityPolicy < Inspec.resource(1)
   name 'local_security_policy'
-  desc 'Reads Local Security Policy values via secedit export or WMI fallback.'
+  desc 'Reads Local Security Policy values via secedit export or registry fallback.'
   supports platform: 'windows'
 
   def initialize
@@ -121,43 +126,45 @@ class LocalSecurityPolicy < Inspec.resource(1)
   def method_missing(name, *args)
     key   = name.to_s
     value = lookup_key(key)
-    return to_typed(value) if value
+    return to_typed(value) unless value.nil?
 
     super
   end
 
   def respond_to_missing?(name, include_private = false)
-    !!lookup_key(name.to_s) || super
+    !lookup_key(name.to_s).nil? || super
   end
 
   def [](key)
-    to_typed(lookup_key(key))
+    to_typed(lookup_key(key.to_s))
   end
 
   private
 
+  # Scan all sections for the key instead of assuming fixed section names
   def lookup_key(key)
     return nil unless @policy.is_a?(Hash)
 
-    %w[System Access Event Audit Registry Values].each do |section|
-      section_hash = @policy[section]
-      return section_hash[key] if section_hash.is_a?(Hash) && section_hash.key?(key)
+    @policy.each_value do |section_hash|
+      next unless section_hash.is_a?(Hash)
+      return section_hash[key] if section_hash.key?(key)
     end
+
     nil
   end
 
   def to_typed(v)
     return nil if v.nil?
-    # secedit/WMI often stores numbers as strings
-    return v.to_i if v.match?(/^[-]?\d+$/)
-    v
+    s = v.to_s.strip
+    return s.to_i if s.match?(/^[-]?\d+$/)
+    s
   end
 end
 
 # Resource: user_right('SeXxxPrivilege') -> Array[String]
 class UserRight < Inspec.resource(1)
   name 'user_right'
-  desc 'Reads User Rights Assignment (Privilege Rights) via secedit export.'
+  desc 'Reads User Rights Assignment (Privilege Rights) via secedit export or registry fallback.'
   supports platform: 'windows'
 
   def initialize(right_name)
@@ -171,7 +178,6 @@ class UserRight < Inspec.resource(1)
   end
 
   def value
-    # Bulletproof nil handling - return empty array if anything fails
     return [] unless @policy.is_a?(Hash)
 
     priv_rights = @policy['Privilege Rights']
