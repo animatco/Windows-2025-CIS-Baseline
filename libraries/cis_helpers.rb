@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 #
 # CIS helper: Convert MaximumPasswordAge from seconds → days
 #
@@ -11,17 +10,22 @@
 #
 
 module CisHelpers
+  #
+  # Convert MaximumPasswordAge from seconds → days
+  #
+  # - secedit export returns days already
+  # - registry fallback returns seconds
+  #
   def cis_password_age_days(value)
     return nil if value.nil?
 
-    # If secedit export succeeded, value is already in days (integer)
+    # If already in days (secedit), return as-is
     return value if value.is_a?(Integer) && value < 5000
 
-    # If registry fallback was used, value is in seconds
-    # Convert seconds → days (rounded down)
+    # Registry fallback: seconds → days
     (value.to_i / 86_400)
   end
 end
 
-# Make helper available to all controls
-Inspec::Resource.register_helper(CisHelpers)
+# Register helper module with Inspec
+Inspec::ProfileContext.add_helper_module(CisHelpers)
