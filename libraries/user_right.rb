@@ -3,6 +3,23 @@ class UserRight < Inspec.resource(1)
   desc 'Reads User Rights Assignment (Privilege Rights) via secedit export.'
   supports platform: 'windows'
 
+  WELL_KNOWN_SIDS = {
+    'S-1-5-11'       => 'Authenticated Users',
+    'S-1-5-19'       => 'LOCAL SERVICE',
+    'S-1-5-20'       => 'NETWORK SERVICE',
+    'S-1-5-32-544'   => 'Administrators',
+    'S-1-5-32-545'   => 'Users',
+    'S-1-5-32-546'   => 'Guests',
+    'S-1-5-32-547'   => 'Power Users',
+    'S-1-5-32-548'   => 'Account Operators',
+    'S-1-5-32-549'   => 'Server Operators',
+    'S-1-5-32-550'   => 'Print Operators',
+    'S-1-5-32-551'   => 'Backup Operators',
+    'S-1-5-32-555'   => 'Remote Desktop Users',
+    'S-1-5-6'        => 'SERVICE',
+    'S-1-5-90-0'     => 'Window Manager\\Window Manager Group'
+  }.freeze
+
   def initialize(right_name)
     super()
     @right  = right_name.to_s
@@ -43,19 +60,6 @@ class UserRight < Inspec.resource(1)
   private
 
   def resolve_sid(sid)
-    return sid unless sid.start_with?('S-1-')
-
-    ps = <<~POWERSHELL
-      try {
-        $obj = New-Object System.Security.Principal.SecurityIdentifier("#{sid}")
-        $obj.Translate([System.Security.Principal.NTAccount]).Value
-      } catch {
-        "#{sid}"
-      }
-    POWERSHELL
-
-    cmd = inspec.command("powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command #{ps.inspect}")
-    out = cmd.stdout.to_s.strip
-    out.empty? ? sid : out
+    WELL_KNOWN_SIDS.fetch(sid, sid)
   end
 end
