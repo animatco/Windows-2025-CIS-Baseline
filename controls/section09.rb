@@ -2,6 +2,7 @@
 
 ## Auto-generated from ansible-lockdown/Windows-2025-CIS Ansible role
 ## Source section: section09
+only_if('Section 09 disabled by input') { input('run_section_09') }
 
 control 'cis-9.1.1' do
   impact 1.0
