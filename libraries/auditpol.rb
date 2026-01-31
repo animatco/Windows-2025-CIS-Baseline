@@ -1,9 +1,6 @@
 ﻿# frozen_string_literal: true
 
-# Resource: auditpol_subcategory('{GUID}')
-# Provides: inclusion_setting
-
-class AuditpolSubcategory < Inspec.resource(1)
+class ::AuditpolSubcategory < Inspec.resource(1)
   name 'auditpol_subcategory'
   desc 'Reads Advanced Audit Policy subcategory settings via auditpol.'
   supports platform: 'windows'
@@ -17,6 +14,7 @@ class AuditpolSubcategory < Inspec.resource(1)
     ps = %(powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "AuditPol /get /subcategory:'#{@guid}' -r | ConvertFrom-Csv | Select-Object -ExpandProperty 'Inclusion Setting'")
     cmd = inspec.command(ps)
     return nil unless cmd.exit_status == 0
+
     cmd.stdout.to_s.strip
   end
 

@@ -1,10 +1,6 @@
 ﻿# frozen_string_literal: true
 
 module CisSecurityOptions
-
-  #
-  # Normalize a value to boolean true/false
-  #
   def self.to_bool(value)
     return false if value.nil?
     v = value.to_s.strip
@@ -13,27 +9,12 @@ module CisSecurityOptions
     false
   end
 
-  #
-  # Check if a setting is enabled
-  #
   def self.enabled?(value)
     to_bool(value) == true
   end
 
-  #
-  # Check if a setting is disabled
-  #
   def self.disabled?(value)
     to_bool(value) == false
-  end
-
-end
-
-# Ensure controls can always resolve constants, regardless of InSpec load context.
-if defined?(Object) && defined?(self)
-  constants.each do |c|
-    next if Object.const_defined?(c)
-    Object.const_set(c, const_get(c))
   end
 end
 

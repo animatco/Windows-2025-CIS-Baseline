@@ -1,16 +1,11 @@
-﻿module SectionToggle
+﻿# frozen_string_literal: true
+
+module SectionToggle
   def section_enabled?(section)
     input("run_section_#{section}", value: true)
   end
 end
 
-# Ensure controls can always resolve constants, regardless of InSpec load context.
-if defined?(Object) && defined?(self)
-  constants.each do |c|
-    next if Object.const_defined?(c)
-    Object.const_set(c, const_get(c))
-  end
-end
 
 # Ensure controls can always resolve the constant, regardless of InSpec load context.
 Object.const_set(:SectionToggle, SectionToggle) unless Object.const_defined?(:SectionToggle)
