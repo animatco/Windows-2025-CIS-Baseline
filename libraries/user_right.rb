@@ -58,11 +58,10 @@ class UserRight < Inspec.resource(1)
     'S-1-5-32-578'   => 'Hyper-V Administrators',
     'S-1-5-32-579'   => 'Access Control Assistance Operators',
     'S-1-5-32-580'   => 'Remote Management Users',
-    'S-1-5-80-0'     => 'NT SERVICE\\ALL SERVICES',
-    'S-1-5-90-0'     => 'Window Manager\\Window Manager Group',
+    'S-1-5-80-0'     => 'NT SERVICE\ALL SERVICES',
+    'S-1-5-90-0'     => 'Window Manager\Window Manager Group',
     'S-1-5-113'      => 'Local Account',
-    'S-1-5-114'      => 'Local Account and Member of Administrators Group',
-    'S-1-5-NT AUTHORITY\\ENTERPRISE DOMAIN CONTROLLERS' => 'ENTERPRISE DOMAIN CONTROLLERS'
+    'S-1-5-114'      => 'Local Account and Member of Administrators Group'
   }.freeze
 
   def initialize(right_name)
@@ -70,6 +69,7 @@ class UserRight < Inspec.resource(1)
     @right  = right_name.to_s
     @policy = SeceditPolicy.new(inspec).export_and_parse || {}
     @sid_cache = {}
+    @domain_sids = nil
   end
 
   def to_s
@@ -114,31 +114,72 @@ class UserRight < Inspec.resource(1)
     # Check cache for domain-specific SIDs
     return @sid_cache[sid] if @sid_cache.key?(sid)
 
-    # Try to resolve domain-specific SID via PowerShell
-    resolved = resolve_domain_sid(sid)
+    # Try to resolve via PowerShell
+    resolved = resolve_via_powershell(sid)
     @sid_cache[sid] = resolved
-    resolved
+    return resolved if resolved && resolved != sid
+
+    # Try to resolve via local user/group lookup
+    resolved = resolve_via_local_lookup(sid)
+    @sid_cache[sid] = resolved
+    return resolved if resolved && resolved != sid
+
+    # Return SID as-is if all resolution attempts fail
+    @sid_cache[sid] = sid
+    sid
   end
 
-  def resolve_domain_sid(sid)
+  def resolve_via_powershell(sid)
     ps = <<~POWERSHELL
       try {
         $objSID = New-Object System.Security.Principal.SecurityIdentifier('#{sid}')
         $objUser = $objSID.Translate([System.Security.Principal.NTAccount])
         $objUser.Value
       } catch {
-        '#{sid}'
+        $null
       }
     POWERSHELL
 
     cmd = inspec.command("powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command #{ps.inspect}")
-    return sid unless cmd.exit_status == 0
+    return nil unless cmd.exit_status == 0
 
     result = cmd.stdout.to_s.strip
-    result.empty? ? sid : result
+    result.empty? ? nil : result
+  end
+
+  def resolve_via_local_lookup(sid)
+    # Query WMI for local user/group accounts matching this SID
+    ps = <<~POWERSHELL
+      try {
+        $account = Get-WmiObject Win32_UserAccount -Filter "SID='#{sid}'" -ErrorAction SilentlyContinue
+        if ($account) {
+          if ($account.Domain) {
+            "$($account.Domain)\\$($account.Name)"
+          } else {
+            $account.Name
+          }
+        } else {
+          $group = Get-WmiObject Win32_Group -Filter "SID='#{sid}'" -ErrorAction SilentlyContinue
+          if ($group) {
+            if ($group.Domain) {
+              "$($group.Domain)\\$($group.Name)"
+            } else {
+              $group.Name
+            }
+          }
+        }
+      } catch {
+        $null
+      }
+    POWERSHELL
+
+    cmd = inspec.command("powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command #{ps.inspect}")
+    return nil unless cmd.exit_status == 0
+
+    result = cmd.stdout.to_s.strip
+    result.empty? ? nil : result
   end
 end
 
 # Ensure controls can always resolve the constant, regardless of InSpec load context.
 Object.const_set(:UserRight, UserRight) unless Object.const_defined?(:UserRight)
- 
