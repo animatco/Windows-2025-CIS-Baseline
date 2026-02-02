@@ -119,11 +119,11 @@ control 'cis-18.4.6' do
   impact 1.0
   title "Ensure 'NetBT NodeType configuration' is set to 'Enabled: P-node recommended'"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.4.6.'
-  only_if('Level 1 controls disabled') { input('run_level_1') }
-  only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
+  only_if('Level 1 controls enabled') { input('run_level_1') }
   tag cis_id: '18.4.6'
-  describe registry_key('HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\NetBT\\Parameters') do
-    its('None') { should cmp 2 }
+  
+  describe registry_key('HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NetBT\Parameters') do
+    its('NodeType') { should cmp 2 }
   end
 end
 
@@ -131,11 +131,11 @@ control 'cis-18.4.7' do
   impact 1.0
   title 'Ensure WDigest Authentication is set to Disabled'
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.4.7.'
-  only_if('Level 1 controls disabled') { input('run_level_1') }
-  only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
+  only_if('Level 1 controls enabled') { input('run_level_1') }
   tag cis_id: '18.4.7'
-  describe registry_key('HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\SecurityProviders\\Wdigest') do
-    its('None') { should cmp 0 }
+  
+  describe registry_key('HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\Wdigest') do
+    its('UseLogonCredential') { should cmp 0 }
   end
 end
 
