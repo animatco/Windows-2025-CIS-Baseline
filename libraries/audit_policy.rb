@@ -1,4 +1,3 @@
-
 # frozen_string_literal: true
 
 class AuditPolicy < Inspec.resource(1)
@@ -18,6 +17,8 @@ class AuditPolicy < Inspec.resource(1)
     return nil if category_name.nil?
 
     policies = parse_audit_policy
+    return nil if policies.nil? || policies.empty?
+
     policies[category_name.to_s]
   end
 
@@ -42,37 +43,38 @@ class AuditPolicy < Inspec.resource(1)
 
     @cache = {}
 
-    # Use auditpol to get audit policy settings
-    ps = 'auditpol /get /category:* /r | ConvertFrom-Csv | Select-Object -Property "Category", "Subcategory", "Inclusion Setting"'
-    cmd = inspec.command("powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"#{ps}\"")
+    # Use auditpol to get audit policy settings in CSV format
+    ps = 'auditpol /get /category:* /r'
+    cmd = inspec.command(ps)
 
     return @cache unless cmd.exit_status == 0
 
     output = cmd.stdout.to_s
     return @cache if output.empty?
 
-    # Parse CSV output and group by category
+    # Parse CSV output line by line
     lines = output.split("\n").reject(&:empty?)
 
+    # Skip header line if present
+    lines.shift if lines.first&.include?('Category')
+
     lines.each do |line|
-      parts = line.split(',')
+      parts = line.split(',').map { |p| p.to_s.strip.gsub('"', '') }
       next unless parts.length >= 3
 
-      category = parts[0].to_s.strip
-      # inclusion_setting = parts[2].to_s.strip
-      inclusion_setting = parts[2].to_s.strip.gsub('"', '')
+      category = parts[0]
+      inclusion_setting = parts[2]
 
-      # Store unique inclusion settings per category
+      next if category.empty? || inclusion_setting.empty?
+
+      # Aggregate settings per category (all subcategories must match for category to be set)
       if @cache[category].nil?
         @cache[category] = inclusion_setting
       else
-        # If category has multiple subcategories with different settings, combine them
+        # If any subcategory differs, mark as mixed
         existing = @cache[category].to_s
-        current = inclusion_setting.to_s
-
-        # Keep track of all unique settings for this category
-        unless existing.include?(current)
-          @cache[category] = "#{existing} and #{current}"
+        unless existing == inclusion_setting
+          @cache[category] = "Mixed" unless existing.include?("Mixed")
         end
       end
     end
