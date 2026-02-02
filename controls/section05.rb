@@ -23,7 +23,7 @@ control 'cis-5.2' do
   impact 1.0
   title 'Ensure Print Spooler (Spooler) is set to Disabled Member Server'
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 5.2.'
-  only_if('Level 2 controls enabled') { input('run_level_2') }
+  only_if('Level 2 controls enabled') { input('run_level_1') }
   only_if('Member Server role required') { input('server_role') == 'member_server' }
   tag cis_id: '5.2'
   describe registry_key('HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Spooler') do
