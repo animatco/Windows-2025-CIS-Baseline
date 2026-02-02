@@ -705,15 +705,24 @@ control 'cis-18.6.14.1' do
   impact 1.0
   title "Ensure 'Hardened UNC Paths' is set to 'Enabled, with Require Mutual Authentication, Require Integrity, and Require Privacy set for all NETLOGON and SYSVOL shares'"
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 18.6.14.1.'
+
   only_if('Level 1 controls enabled') { input('run_level_1') }
   only_if('Applicable to Member Server or Domain Controller') do
     %w[domain_controller member_server].include?(input('server_role').to_s.strip.downcase)
   end
+
   tag cis_id: '18.6.14.1'
 
   describe registry_key('HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\NetworkProvider\HardenedPaths') do
-    its('\\*\NETLOGON') { should eq 'RequireMutualAuthentication=1, RequireIntegrity=1, RequirePrivacy=1' }
-    its('\\*\SYSVOL') { should eq 'RequireMutualAuthentication=1, RequireIntegrity=1, RequirePrivacy=1' }
+    it 'has correct NETLOGON hardened path' do
+      expect(subject.values['\\\\*\\NETLOGON'])
+        .to eq 'RequireMutualAuthentication=1, RequireIntegrity=1, RequirePrivacy=1'
+    end
+
+    it 'has correct SYSVOL hardened path' do
+      expect(subject.values['\\\\*\\SYSVOL'])
+        .to eq 'RequireMutualAuthentication=1, RequireIntegrity=1, RequirePrivacy=1'
+    end
   end
 end
 
