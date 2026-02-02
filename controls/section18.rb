@@ -710,8 +710,10 @@ control 'cis-18.6.14.1' do
     %w[domain_controller member_server].include?(input('server_role').to_s.strip.downcase)
   end
   tag cis_id: '18.6.14.1'
-  describe registry_key('HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Networkprovider\Hardenedpaths') do
+
+  describe registry_key('HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\NetworkProvider\HardenedPaths') do
     its('\\*\NETLOGON') { should eq 'RequireMutualAuthentication=1, RequireIntegrity=1, RequirePrivacy=1' }
+    its('\\*\SYSVOL') { should eq 'RequireMutualAuthentication=1, RequireIntegrity=1, RequirePrivacy=1' }
   end
 end
 
