@@ -1,5 +1,4 @@
-﻿
-# frozen_string_literal: true
+﻿# frozen_string_literal: true
 
 #
 # Local Security Policy export parser
@@ -10,7 +9,7 @@
 #
 
 class SeceditPolicy
-  EXPORT_CFG = 'C:\\Windows\\Temp\\inspec-secpol.cfg'.freeze
+  EXPORT_CFG = 'C:\Windows\Temp\inspec-secpol.cfg'.freeze
 
   def initialize(inspec)
     @inspec = inspec
@@ -122,7 +121,7 @@ class SeceditPolicy
 
     keys.each_with_object({}) do |k, h|
       h[k] = registry_read(
-        'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Lsa',
+        'HKLM:\SYSTEM\CurrentControlSet\Control\Lsa',
         k
       )
     end
@@ -133,24 +132,25 @@ class SeceditPolicy
   #
   def registry_security_options
     {
-      'EnableAdminAccount'                => registry_read('HKLM:\\SAM\\SAM\\Domains\\Account\\Users\\000001F4', 'F'),
-      'EnableGuestAccount'                => registry_read('HKLM:\\SAM\\SAM\\Domains\\Account\\Users\\000001F5', 'F'),
-      'LimitBlankPasswordUse'             => registry_read('HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Lsa', 'LimitBlankPasswordUse'),
-      'SCENoApplyLegacyAuditPolicy'       => registry_read('HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Lsa', 'SCENoApplyLegacyAuditPolicy'),
-      'AddPrinterDrivers'                 => registry_read('HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Print\\Providers\\LanMan Print Services\\Servers', 'AddPrinterDrivers'),
-      'RequireSignOrSeal'                 => registry_read('HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Netlogon\\Parameters', 'RequireSignOrSeal'),
-      'SealSecureChannel'                 => registry_read('HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Netlogon\\Parameters', 'SealSecureChannel'),
-      'SignSecureChannel'                 => registry_read('HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Netlogon\\Parameters', 'SignSecureChannel'),
-      'RequireStrongKey'                  => registry_read('HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Netlogon\\Parameters', 'RequireStrongKey'),
-      'DisableCAD'                        => registry_read('HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System', 'DisableCAD'),
-      'InactivityTimeoutSecs'             => registry_read('HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System', 'InactivityTimeoutSecs'),
-      'RequireSecuritySignature'          => registry_read('HKLM:\\SYSTEM\\CurrentControlSet\\Services\\LanmanWorkstation\\Parameters', 'RequireSecuritySignature'),
-      'EnableSecuritySignature'           => registry_read('HKLM:\\SYSTEM\\CurrentControlSet\\Services\\LanmanWorkstation\\Parameters', 'EnableSecuritySignature')
+      'EnableAdminAccount'                => registry_read('HKLM:\SYSTEM\CurrentControlSet\Control\Lsa', 'EnableAdminAccount'),
+      'EnableGuestAccount'                => registry_read('HKLM:\SYSTEM\CurrentControlSet\Control\Lsa', 'EnableGuestAccount'),
+      'LimitBlankPasswordUse'             => registry_read('HKLM:\SYSTEM\CurrentControlSet\Control\Lsa', 'LimitBlankPasswordUse'),
+      'SCENoApplyLegacyAuditPolicy'       => registry_read('HKLM:\SYSTEM\CurrentControlSet\Control\Lsa', 'SCENoApplyLegacyAuditPolicy'),
+      'AddPrinterDrivers'                 => registry_read('HKLM:\SYSTEM\CurrentControlSet\Control\Print\Providers\LanMan Print Services\Servers', 'AddPrinterDrivers'),
+      'RequireSignOrSeal'                 => registry_read('HKLM:\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters', 'RequireSignOrSeal'),
+      'SealSecureChannel'                 => registry_read('HKLM:\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters', 'SealSecureChannel'),
+      'SignSecureChannel'                 => registry_read('HKLM:\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters', 'SignSecureChannel'),
+      'RequireStrongKey'                  => registry_read('HKLM:\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters', 'RequireStrongKey'),
+      'DisableCAD'                        => registry_read('HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System', 'DisableCAD'),
+      'InactivityTimeoutSecs'             => registry_read('HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System', 'InactivityTimeoutSecs'),
+      'RequireSecuritySignature'          => registry_read('HKLM:\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters', 'RequireSecuritySignature'),
+      'EnableSecuritySignature'           => registry_read('HKLM:\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters', 'EnableSecuritySignature')
     }
   end
 
   #
   # Registry reader (typed)
+  # Handles multi-part values like "4,1" by extracting the numeric portion
   #
   def registry_read(path, key)
     ps = <<~POWERSHELL
@@ -165,6 +165,12 @@ class SeceditPolicy
 
     raw = cmd.stdout.to_s.strip
     return nil if raw.empty?
+
+    # Handle registry values formatted as "type,value" (e.g., "4,1")
+    if raw.include?(',')
+      parts = raw.split(',')
+      raw = parts[-1].strip # Take the last part (the actual value)
+    end
 
     raw.match?(/^[-]?\d+$/) ? raw.to_i : raw
   end
@@ -183,6 +189,24 @@ class LocalSecurityPolicy < Inspec.resource(1)
     @policy = SeceditPolicy.new(inspec).export_and_parse || {}
   end
 
+  # Explicit accessors for commonly used settings
+  def EnableAdminAccount
+    to_typed(lookup_key('EnableAdminAccount'))
+  end
+
+  def EnableGuestAccount
+    to_typed(lookup_key('EnableGuestAccount'))
+  end
+
+  def LimitBlankPasswordUse
+    to_typed(lookup_key('LimitBlankPasswordUse'))
+  end
+
+  def EnableServerOperatorsScheduleTasks
+    to_typed(lookup_key('EnableServerOperatorsScheduleTasks'))
+  end
+
+  # Dynamic method_missing for other keys
   def method_missing(name, *args)
     key   = name.to_s
     value = lookup_key(key)
