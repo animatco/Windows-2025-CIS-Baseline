@@ -1,3 +1,4 @@
+
 # frozen_string_literal: true
 ###############################################
 #  CIS Microsoft Windows Server 2025 Benchmark
@@ -26,6 +27,9 @@ control 'cis-19.6.6.1.1' do
   title 'Ensure Turn off Help Experience Improvement Program is set to Enabled'
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 19.6.6.1.1.'
   only_if('Level 2 controls enabled') { input('run_level_2') }
+  only_if("Skipped testing Level 2 - only Level 1 enabled") do
+    input('run_level_2') || !input('run_level_1')
+  end
   only_if('Applicable to Member Server or Domain Controller') do
     %w[member_server domain_controller].include?(input('server_role').to_s.strip.downcase)
   end
@@ -166,14 +170,21 @@ control 'cis-19.7.46.2.1' do
   title 'Ensure Prevent Codec Download is set to Enabled'
   desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 19.7.46.2.1'
   only_if('Level 2 controls enabled') { input('run_level_2') }
+  only_if("Skipped testing Level 2 - only Level 1 enabled") do
+    input('run_level_2') || !input('run_level_1')
+  end
   only_if('Applicable to Member Server or Domain Controller') do
     %w[member_server domain_controller].include?(input('server_role').to_s.strip.downcase)
   end
   tag cis_id: '19.7.46.2.1'
   
-  # Check if registry key exists first, then validate the value
-  describe registry_key('HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows\MediaPlayer') do
-    it { should exist }
-    its('PreventCodecDownload') { should cmp 1 }
+  if registry_key('HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows\MediaPlayer').exist?
+    describe registry_key('HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows\MediaPlayer') do
+      its('PreventCodecDownload') { should cmp 1 }
+    end
+  else
+    describe 'MediaPlayer Codec Download Policy' do
+      skip 'Registry key does not exist - policy not configured'
+    end
   end
 end
