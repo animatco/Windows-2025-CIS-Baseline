@@ -1,4 +1,5 @@
-﻿# frozen_string_literal: true
+﻿
+# frozen_string_literal: true
 
 class ::AuditpolSubcategory < Inspec.resource(1)
   name 'auditpol_subcategory'
@@ -22,3 +23,6 @@ class ::AuditpolSubcategory < Inspec.resource(1)
     "AuditPol subcategory #{@guid}"
   end
 end
+
+# Ensure controls can always resolve the constant, regardless of InSpec load context.
+Object.const_set(:AuditpolSubcategory, AuditpolSubcategory) unless Object.const_defined?(:AuditpolSubcategory)
