@@ -714,17 +714,14 @@ control 'cis-18.6.14.1' do
   tag cis_id: '18.6.14.1'
 
   describe registry_key('HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\NetworkProvider\HardenedPaths') do
-    it 'has correct NETLOGON hardened path' do
-      expect(subject.values['\\\\*\\NETLOGON'])
-        .to eq 'RequireMutualAuthentication=1, RequireIntegrity=1, RequirePrivacy=1'
-    end
+    it { should have_property_value('\\\\*\\NETLOGON', :string,
+           'RequireMutualAuthentication=1, RequireIntegrity=1, RequirePrivacy=1') }
 
-    it 'has correct SYSVOL hardened path' do
-      expect(subject.values['\\\\*\\SYSVOL'])
-        .to eq 'RequireMutualAuthentication=1, RequireIntegrity=1, RequirePrivacy=1'
-    end
+    it { should have_property_value('\\\\*\\SYSVOL', :string,
+           'RequireMutualAuthentication=1, RequireIntegrity=1, RequirePrivacy=1') }
   end
 end
+
 
 control 'cis-18.6.19.2.1' do
   impact 1.0
