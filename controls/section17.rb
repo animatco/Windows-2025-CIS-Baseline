@@ -140,6 +140,18 @@ control 'cis-17.3.2' do
   end
 end
 
+control 'cis-17.3.3' do
+  impact 1.0
+  title 'Ensure Audit Other Detailed Tracking Events is set to Success and Failure'
+  desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 17.3.3.'
+  only_if('Level 1 controls disabled') { input('run_level_1') }
+  only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
+  tag cis_id: '17.3.3'
+  describe auditpol_subcategory('{0cce922e-69ae-11d9-bed3-505054503030}') do
+    its('inclusion_setting') { should cmp 'Success' }
+  end
+end
+
 control 'cis-17.4.1' do
   impact 1.0
   title 'Ensure Audit Directory Service Access is set to include Failure DC only | Domain Controller'
@@ -284,6 +296,18 @@ control 'cis-17.6.4' do
   end
 end
 
+control 'cis-17.6.5' do
+  impact 1.0
+  title 'Ensure Audit SAM is set to Success and Failure'
+  desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 17.6.5.'
+  only_if('Level 1 controls disabled') { input('run_level_1') }
+  only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
+  tag cis_id: '17.6.5'
+  describe auditpol_subcategory('{0cce9246-69ae-11d9-bed3-505054503030}') do
+    its('inclusion_setting') { should cmp 'Success' }
+  end
+end
+
 control 'cis-17.7.1' do
   impact 1.0
   title 'Ensure Audit Audit Policy Change is set to include Success'
@@ -356,6 +380,18 @@ control 'cis-17.8.1' do
   end
 end
 
+control 'cis-17.8.2' do
+  impact 1.0
+  title 'Ensure Audit Non Sensitive Privilege Use is set to Success and Failure'
+  desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 17.8.2.'
+  only_if('Level 1 controls disabled') { input('run_level_1') }
+  only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
+  tag cis_id: '17.8.2'
+  describe auditpol_subcategory('{0cce9229-69ae-11d9-bed3-505054503030}') do
+    its('inclusion_setting') { should cmp 'Success' }
+  end
+end
+
 control 'cis-17.9.1' do
   impact 1.0
   title 'Ensure Audit IPsec Driver is set to Success and Failure'
@@ -413,5 +449,113 @@ control 'cis-17.9.5' do
   tag cis_id: '17.9.5'
   describe auditpol_subcategory('{0cce9212-69ae-11d9-bed3-505054503030}') do
     its('inclusion_setting') { should cmp 'Success' }
+  end
+end
+
+control 'cis-17.10.1' do
+  impact 1.0
+  title 'Ensure Audit Filtering Platform Connection is set to Success and Failure'
+  desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 17.10.1.'
+  only_if('Level 1 controls disabled') { input('run_level_1') }
+  only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
+  tag cis_id: '17.10.1'
+  describe auditpol_subcategory('{0cce9226-69ae-11d9-bed3-505054503030}') do
+    its('inclusion_setting') { should cmp 'Success' }
+  end
+end
+
+control 'cis-17.10.2' do
+  impact 1.0
+  title 'Ensure Audit Filtering Platform Packet Drop is set to Success and Failure'
+  desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 17.10.2.'
+  only_if('Level 1 controls disabled') { input('run_level_1') }
+  only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
+  tag cis_id: '17.10.2'
+  describe auditpol_subcategory('{0cce9225-69ae-11d9-bed3-505054503030}') do
+    its('inclusion_setting') { should cmp 'Success' }
+  end
+end
+
+control 'cis-17.10.3' do
+  impact 1.0
+  title 'Ensure Audit Other Filtering Platform Events is set to Success and Failure'
+  desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 17.10.3.'
+  only_if('Level 1 controls disabled') { input('run_level_1') }
+  only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
+  tag cis_id: '17.10.3'
+  describe auditpol_subcategory('{0cce9241-69ae-11d9-bed3-505054503030}') do
+    its('inclusion_setting') { should cmp 'Success' }
+  end
+end
+
+control 'cis-17.11.1' do
+  impact 1.0
+  title 'Ensure Audit Certification Services is set to Success and Failure'
+  desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 17.11.1.'
+  only_if('Level 1 controls disabled') { input('run_level_1') }
+  only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
+  tag cis_id: '17.11.1'
+  describe auditpol_subcategory('{0cce9247-69ae-11d9-bed3-505054503030}') do
+    its('inclusion_setting') { should cmp 'Success' }
+  end
+end
+
+control 'cis-17.11.2' do
+  impact 1.0
+  title 'Ensure Audit Other Object Access Events is set to include Success'
+  desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 17.11.2.'
+  only_if('Level 1 controls disabled') { input('run_level_1') }
+  only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
+  tag cis_id: '17.11.2'
+  describe auditpol_subcategory('{0cce9243-69ae-11d9-bed3-505054503030}') do
+    its('inclusion_setting') { should cmp 'include' }
+  end
+end
+
+control 'cis-17.12.1' do
+  impact 1.0
+  title 'Ensure Audit Registry is set to include Success'
+  desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 17.12.1.'
+  only_if('Level 1 controls disabled') { input('run_level_1') }
+  only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
+  tag cis_id: '17.12.1'
+  describe auditpol_subcategory('{0cce9242-69ae-11d9-bed3-505054503030}') do
+    its('inclusion_setting') { should cmp 'include' }
+  end
+end
+
+control 'cis-17.13.1' do
+  impact 1.0
+  title 'Ensure Audit File System is set to include Success'
+  desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 17.13.1.'
+  only_if('Level 1 controls disabled') { input('run_level_1') }
+  only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
+  tag cis_id: '17.13.1'
+  describe auditpol_subcategory('{0cce9223-69ae-11d9-bed3-505054503030}') do
+    its('inclusion_setting') { should cmp 'include' }
+  end
+end
+
+control 'cis-17.14.1' do
+  impact 1.0
+  title 'Ensure Audit Kernel Object is set to include Success'
+  desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 17.14.1.'
+  only_if('Level 1 controls disabled') { input('run_level_1') }
+  only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
+  tag cis_id: '17.14.1'
+  describe auditpol_subcategory('{0cce921d-69ae-11d9-bed3-505054503030}') do
+    its('inclusion_setting') { should cmp 'include' }
+  end
+end
+
+control 'cis-17.15.1' do
+  impact 1.0
+  title 'Ensure Audit Handle Manipulation is set to include Success'
+  desc  'CIS Microsoft Windows Server 2025 v1.0.0 control 17.15.1.'
+  only_if('Level 1 controls disabled') { input('run_level_1') }
+  only_if('Server role mismatch') { input('server_role') == 'domain_controller' || input('server_role') == 'member_server' }
+  tag cis_id: '17.15.1'
+  describe auditpol_subcategory('{0cce921e-69ae-11d9-bed3-505054503030}') do
+    its('inclusion_setting') { should cmp 'include' }
   end
 end
