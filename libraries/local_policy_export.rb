@@ -1,11 +1,12 @@
-﻿# frozen_string_literal: true
+﻿
+# frozen_string_literal: true
 
 #
 # Local Security Policy export parser
 # - Uses secedit for SECURITYPOLICY + USER_RIGHTS
 # - Falls back to registry for System Access + Security Options
-# - Windows Server 2012R2 â†’ 2025 compatible
-# - WinRMâ€‘safe (no profile temp dirs)
+# - Windows Server 2012R2 → 2025 compatible
+# - WinRM-safe (no profile temp dirs)
 #
 
 class SeceditPolicy
@@ -221,10 +222,5 @@ class LocalSecurityPolicy < Inspec.resource(1)
 end
 
 # Ensure controls can always resolve constants, regardless of InSpec load context.
-if defined?(Object) && defined?(self)
-  constants.each do |c|
-    next if Object.const_defined?(c)
-    Object.const_set(c, const_get(c))
-  end
-end
-
+Object.const_set(:SeceditPolicy, SeceditPolicy) unless Object.const_defined?(:SeceditPolicy)
+Object.const_set(:LocalSecurityPolicy, LocalSecurityPolicy) unless Object.const_defined?(:LocalSecurityPolicy)
