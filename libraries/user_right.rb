@@ -1,4 +1,6 @@
-﻿class UserRight < Inspec.resource(1)
+﻿# frozen_string_literal: true
+
+class UserRight < Inspec.resource(1)
   name 'user_right'
   desc 'Reads User Rights Assignment (Privilege Rights) via secedit export.'
   supports platform: 'windows'
@@ -17,7 +19,7 @@
     'S-1-5-32-551'   => 'Backup Operators',
     'S-1-5-32-555'   => 'Remote Desktop Users',
     'S-1-5-6'        => 'SERVICE',
-    'S-1-5-90-0'     => 'Window Manager\\Window Manager Group'
+    'S-1-5-90-0'     => 'Window Manager\Window Manager Group'
   }.freeze
 
   def initialize(right_name)
@@ -60,15 +62,10 @@
   private
 
   def resolve_sid(sid)
+    return nil if sid.nil?
     WELL_KNOWN_SIDS.fetch(sid, sid)
   end
 end
 
 # Ensure controls can always resolve constants, regardless of InSpec load context.
-if defined?(Object) && defined?(self)
-  constants.each do |c|
-    next if Object.const_defined?(c)
-    Object.const_set(c, const_get(c))
-  end
-end
-
+Object.const_set(:UserRight, UserRight) unless Object.const_defined?(:UserRight)
