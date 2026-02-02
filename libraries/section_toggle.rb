@@ -6,6 +6,5 @@ module SectionToggle
   end
 end
 
-
 # Ensure controls can always resolve the constant, regardless of InSpec load context.
 Object.const_set(:SectionToggle, SectionToggle) unless Object.const_defined?(:SectionToggle)

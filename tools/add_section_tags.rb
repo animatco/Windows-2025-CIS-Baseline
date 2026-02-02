@@ -1,3 +1,4 @@
+
 #!/usr/bin/env ruby
 # Automatically insert `tag section: 'X.Y'` into CIS controls.
 # Supports:
@@ -45,7 +46,7 @@ target_files.each do |file|
         output << "  tag section: '#{current_section}'\n"
         tag_inserted = true
         changed = true
-      elsif line =~ CONTROL_REGEX && !lines[idx+1].strip.start_with?("title")
+      elsif line =~ CONTROL_REGEX && !lines[idx + 1].strip.start_with?("title")
         # No title present, insert right after control line
         output << "  tag section: '#{current_section}'\n"
         tag_inserted = true
